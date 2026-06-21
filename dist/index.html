@@ -29,7 +29,7 @@
 
     h1, h2, h3, h4 { font-family: var(--font-heading); text-transform: uppercase; letter-spacing: -0.03em; font-weight: 900; line-height: 1.1; margin-bottom: 0.5em; }
 
-    .title-monolith { font-size: clamp(1.5rem, 5vw, 5rem); line-height: 0.95; color: var(--text-primary); max-width: 1200px; margin: 0 auto; position: relative; z-index: 10; text-shadow: 0 4px 24px rgba(0,0,0,0.5); word-break: break-word; }
+    .title-monolith { font-size: clamp(1.5rem, 5vw, 5rem); line-height: 0.95; color: var(--text-primary); max-width: 1200px; margin: 0 auto; position: relative; z-index: 10; text-shadow: 0 4px 24px rgba(0,0,0,0.5); word-break: break-word; text-align: center; }
     .text-stark { font-family: var(--font-body); font-size: clamp(1.2rem, 2vw, 1.5rem); color: var(--text-secondary); font-weight: 400; max-width: 800px; }
     .container { width: 100%; max-width: 1400px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 10; }
     .section { padding: 160px 0; border-bottom: 1px solid var(--border); position: relative; overflow: hidden; }
@@ -58,11 +58,14 @@
     }
 
     /* Apex Carousel */
-    .carousel-track { display: flex; gap: 24px; overflow-x: auto; padding: 40px 0 60px 0; scroll-snap-type: x mandatory; margin: 0; width: 100%; perspective: 1000px; }
-    .carousel-track::-webkit-scrollbar { height: 12px; }
-    .carousel-track::-webkit-scrollbar-track { background: var(--bg-primary); border: 1px solid var(--border); border-radius: 0; }
-    .carousel-track::-webkit-scrollbar-thumb { background: var(--text-secondary); border-radius: 0; }
-    .carousel-track::-webkit-scrollbar-thumb:hover { background: var(--text-primary); }
+    .carousel-track { display: flex; gap: 24px; overflow-x: auto; padding: 40px 0 20px 0; scroll-snap-type: x mandatory; margin: 0; width: 100%; perspective: 1000px; scrollbar-width: none; -ms-overflow-style: none; }
+    .carousel-track::-webkit-scrollbar { display: none; }
+    .carousel-nav { display: flex; justify-content: center; align-items: center; gap: 24px; margin-top: 20px; }
+    .carousel-btn { background: transparent; border: 1px solid var(--border); color: var(--text-secondary); width: 48px; height: 48px; border-radius: 50%; cursor: pointer; display: flex; justify-content: center; align-items: center; transition: all 0.3s; font-size: 1.2rem; }
+    .carousel-btn:hover { background: var(--text-primary); color: var(--bg-primary); border-color: var(--text-primary); }
+    .carousel-dots { display: flex; gap: 12px; }
+    .dot { width: 8px; height: 8px; background: var(--border); border-radius: 50%; cursor: pointer; transition: all 0.3s; }
+    .dot.active { background: var(--text-primary); transform: scale(1.5); }
 
     .carousel-card { flex: 0 0 min(85vw, 400px); scroll-snap-align: center; background-color: var(--bg-secondary); border: 1px solid var(--border); border-radius: 4px; transition: transform 0.1s ease-out, box-shadow 0.1s ease-out; cursor: pointer; display: flex; flex-direction: column; text-decoration: none; position: relative; overflow: hidden; transform-style: preserve-3d; will-change: transform; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
     .card-inner { pointer-events: none; display: flex; flex-direction: column; height: 100%; transform: translateZ(30px); }
@@ -146,6 +149,43 @@
               if(rect.top < window.innerHeight) { r.classList.add('active'); }
           });
       }, 100);
+
+      // Carousel Navigation Logic
+      setTimeout(() => {
+          const track = document.querySelector('.carousel-track');
+          const btnPrev = document.getElementById('btn-prev');
+          const btnNext = document.getElementById('btn-next');
+          const dotsWrap = document.getElementById('carousel-dots');
+          const cards = document.querySelectorAll('.carousel-card');
+
+          if (track && btnPrev && btnNext && dotsWrap && cards.length > 0) {
+              cards.forEach((card, i) => {
+                  const dot = document.createElement('div');
+                  dot.className = i === 0 ? 'dot active' : 'dot';
+                  dot.addEventListener('click', () => {
+                      track.scrollTo({ left: card.offsetLeft - track.offsetLeft, behavior: 'smooth' });
+                  });
+                  dotsWrap.appendChild(dot);
+              });
+
+              const scrollAmount = cards[0].offsetWidth + 24; // Card width + gap
+
+              btnPrev.addEventListener('click', () => {
+                  track.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+              });
+
+              btnNext.addEventListener('click', () => {
+                  track.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+              });
+
+              track.addEventListener('scroll', () => {
+                  const index = Math.round(track.scrollLeft / scrollAmount);
+                  document.querySelectorAll('.dot').forEach((dot, i) => {
+                      dot.className = i === index ? 'dot active' : 'dot';
+                  });
+              });
+          }
+      }, 500); // Small delay to let Lume DOM inject
     });
   </script>
   <script src="/dwsc.js"></script>
