@@ -1,4 +1,4 @@
-define global_css = dom.inject_css("
+dom.inject_css("
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&family=Inter:wght@400;500;700&display=swap');
 
 :root {

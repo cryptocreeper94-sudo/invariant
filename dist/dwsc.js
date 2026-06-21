@@ -93,7 +93,7 @@ const state = {
 
 // ═══ Application Code ═══
 
-const global_css = dom.inject_css("
+dom.inject_css(`
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&family=Inter:wght@400;500;700&display=swap');
 
 :root {
@@ -129,7 +129,7 @@ h1, h2, h3, h4 { font-family: var(--font-heading); text-transform: uppercase; le
 
 .btn-brutal { display: inline-block; background-color: transparent; color: var(--text-primary); border: 2px solid var(--text-primary); padding: 16px 48px; font-family: var(--font-heading); font-size: 1.25rem; font-weight: 800; text-transform: uppercase; text-decoration: none; cursor: pointer; transition: all 0.2s ease; }
 .btn-brutal:hover { background-color: var(--text-primary); color: var(--bg-primary); }
-", "global-css")
+`, "global-css")
 
 // Navigation
 const nav = dom.create("nav", { styles: { padding: "32px 24px", borderBottom: "1px solid var(--border)", display: "flex", justifyContent: "space-between", alignItems: "center" } })
