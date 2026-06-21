@@ -1,0 +1,116 @@
+define global_css = dom.inject_css("
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&family=Inter:wght@400;500;700&display=swap');
+
+:root {
+  --bg-primary: #050505;
+  --bg-secondary: #111111;
+  --text-primary: #FFFFFF;
+  --text-secondary: #888888;
+  --border: #333333;
+  --font-heading: 'Outfit', sans-serif;
+  --font-body: 'Inter', sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background-color: var(--bg-primary); color: var(--text-primary); font-family: var(--font-body); line-height: 1.6; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+
+h1, h2, h3, h4 { font-family: var(--font-heading); text-transform: uppercase; letter-spacing: -0.03em; font-weight: 900; line-height: 1.1; margin-bottom: 0.5em; }
+
+.title-monolith { font-size: clamp(3rem, 8vw, 8rem); color: var(--text-primary); max-width: 1200px; margin: 0 auto; }
+.text-stark { font-family: var(--font-body); font-size: clamp(1.2rem, 2vw, 1.5rem); color: var(--text-secondary); font-weight: 400; max-width: 800px; }
+.container { width: 100%; max-width: 1400px; margin: 0 auto; padding: 0 24px; }
+.section { padding: 120px 0; border-bottom: 1px solid var(--border); }
+.section-dark { background-color: var(--bg-primary); }
+.section-light { background-color: var(--text-primary); color: var(--bg-primary); }
+.section-light h2 { color: var(--bg-primary); }
+
+.bento-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 24px; margin-top: 64px; }
+.bento-card { background-color: var(--bg-secondary); border: 1px solid var(--border); padding: 48px; transition: all 0.2s ease; cursor: pointer; display: flex; flex-direction: column; justify-content: space-between; min-height: 300px; text-decoration: none; }
+.bento-card:hover { background-color: var(--text-primary); color: var(--bg-primary); border-color: var(--text-primary); transform: translateY(-4px); }
+.bento-card:hover h4, .bento-card:hover p, .bento-card:hover span { color: var(--bg-primary); }
+
+.card-title { font-family: var(--font-heading); font-size: 2.5rem; font-weight: 800; text-transform: uppercase; margin-bottom: 16px; color: var(--text-primary); }
+.card-desc { font-family: var(--font-body); font-size: 1.1rem; color: var(--text-secondary); }
+
+.btn-brutal { display: inline-block; background-color: transparent; color: var(--text-primary); border: 2px solid var(--text-primary); padding: 16px 48px; font-family: var(--font-heading); font-size: 1.25rem; font-weight: 800; text-transform: uppercase; text-decoration: none; cursor: pointer; transition: all 0.2s ease; }
+.btn-brutal:hover { background-color: var(--text-primary); color: var(--bg-primary); }
+", "global-css")
+
+/// Navigation
+define nav = dom.create("nav", { styles: { padding: "32px 24px", borderBottom: "1px solid var(--border)", display: "flex", justifyContent: "space-between", alignItems: "center" } })
+define logo = dom.create("div", { text: "INVARIANT.", styles: { fontFamily: "var(--font-heading)", fontWeight: "900", fontSize: "1.5rem", letterSpacing: "-0.05em" } })
+define nav_link = dom.create("a", { text: "THE STANDARD →", attrs: { href: "#ecosystem" }, styles: { color: "var(--text-primary)", textDecoration: "none", fontFamily: "var(--font-body)", fontWeight: "600" } })
+dom.add_child(nav, logo)
+dom.add_child(nav, nav_link)
+dom.mount(nav)
+
+/// Hero Section
+define hero_sec = dom.create("section", { className: "section section-dark", styles: { minHeight: "80vh", display: "flex", alignItems: "center" } })
+define hero_container = dom.create("div", { className: "container" })
+define hero_h1_1 = dom.create("h1", { className: "title-monolith", text: "THE ERA OF SPECULATION IS DEAD." })
+define hero_h1_2 = dom.create("h1", { className: "title-monolith", text: "MATHEMATICS IS THE NEW STANDARD.", styles: { color: "var(--text-secondary)" } })
+define hero_btn_wrap = dom.create("div", { styles: { marginTop: "64px", display: "flex", gap: "24px", flexWrap: "wrap" } })
+define hero_btn_1 = dom.create("a", { className: "btn-brutal", text: "Read The Manifesto", attrs: { href: "#manifesto" } })
+define hero_btn_2 = dom.create("a", { className: "btn-brutal", text: "Enter The Core", attrs: { href: "#ecosystem" }, styles: { backgroundColor: "var(--text-primary)", color: "var(--bg-primary)" } })
+dom.add_child(hero_btn_wrap, hero_btn_1)
+dom.add_child(hero_btn_wrap, hero_btn_2)
+dom.add_child(hero_container, hero_h1_1)
+dom.add_child(hero_container, hero_h1_2)
+dom.add_child(hero_container, hero_btn_wrap)
+dom.add_child(hero_sec, hero_container)
+dom.mount(hero_sec)
+
+/// Manifesto Section
+define man_sec = dom.create("section", { id: "manifesto", className: "section section-light" })
+define man_container = dom.create("div", { className: "container" })
+define man_h2 = dom.create("h2", { className: "title-monolith", text: "WE REPLACE THE CASINO WITH DETERMINISM.", styles: { fontSize: "clamp(2rem, 5vw, 4rem)" } })
+define man_p = dom.create("p", { className: "text-stark", text: "The current digital and financial architectures are built on a foundation of sand—narrative, emotion, and manipulation. Invariant is the architectural foundation of the future. We do not gamble. We do not speculate. We execute mathematical truth. If you are relying on narrative, you are already obsolete.", styles: { color: "var(--bg-secondary)", marginTop: "32px", fontSize: "1.25rem", maxWidth: "900px" } })
+dom.add_child(man_container, man_h2)
+dom.add_child(man_container, man_p)
+dom.add_child(man_sec, man_container)
+dom.mount(man_sec)
+
+/// Ecosystem Section
+define eco_sec = dom.create("section", { id: "ecosystem", className: "section section-dark" })
+define eco_container = dom.create("div", { className: "container" })
+define eco_h2 = dom.create("h2", { text: "THE VANGUARD", styles: { fontSize: "2rem", color: "var(--text-secondary)" } })
+define eco_h3 = dom.create("h3", { className: "title-monolith", text: "THE DETERMINISTIC ECOSYSTEM", styles: { fontSize: "clamp(2rem, 4vw, 4rem)" } })
+define eco_grid = dom.create("div", { className: "bento-grid" })
+
+define eco_items = [{"title":"Axiom Core","desc":"Financial Determinism & Market Truth. The engine that strips emotion from the tape.","link":"https://dwtl.io"},{"title":"Lume-V","desc":"The Deterministic Ecosystem Standard. Replacing subjective infrastructure with verifiable truth.","link":"https://lumev.tlid.io"},{"title":"Meridian","desc":"Trustless Identity & State. The foundational layer for an uncorrupted digital society.","link":"#"},{"title":"Hydrocore","desc":"Autonomous Resource Management. Algorithmic allocation without human bottleneck.","link":"#"},{"title":"Lume42","desc":"Advanced R&D and AI Agents. Expanding the frontier of deterministic automation.","link":"#"}]
+
+for each item in eco_items
+    define card = dom.create("a", { className: "bento-card", attrs: { href: item.link } })
+    define card_top = dom.create("div", {})
+    define c_title = dom.create("h4", { className: "card-title", text: item.title })
+    define c_desc = dom.create("p", { className: "card-desc", text: item.desc })
+    dom.add_child(card_top, c_title)
+    dom.add_child(card_top, c_desc)
+    
+    define card_bot = dom.create("div", { styles: { fontFamily: "var(--font-heading)", fontWeight: "800", fontSize: "1.25rem", marginTop: "32px", display: "flex", justifyContent: "space-between" } })
+    define bot_span1 = dom.create("span", { text: "INITIATE" })
+    define bot_span2 = dom.create("span", { text: "→" })
+    dom.add_child(card_bot, bot_span1)
+    dom.add_child(card_bot, bot_span2)
+    
+    dom.add_child(card, card_top)
+    dom.add_child(card, card_bot)
+    dom.add_child(eco_grid, card)
+
+dom.add_child(eco_container, eco_h2)
+dom.add_child(eco_container, eco_h3)
+dom.add_child(eco_container, eco_grid)
+dom.add_child(eco_sec, eco_container)
+dom.mount(eco_sec)
+
+/// Footer
+define footer = dom.create("footer", { className: "section section-dark", styles: { borderTop: "1px solid var(--border)", padding: "64px 0" } })
+define footer_container = dom.create("div", { className: "container", styles: { display: "flex", justifyContent: "space-between", alignItems: "center" } })
+define footer_logo = dom.create("div", { text: "INVARIANT.", styles: { fontFamily: "var(--font-heading)", fontWeight: "900", fontSize: "2rem", letterSpacing: "-0.05em", color: "var(--text-secondary)" } })
+define footer_copy = dom.create("div", { text: "© 2026 The Determinism Standard. All Rights Reserved.", styles: { fontFamily: "var(--font-body)", color: "var(--text-secondary)" } })
+dom.add_child(footer_container, footer_logo)
+dom.add_child(footer_container, footer_copy)
+dom.add_child(footer, footer_container)
+dom.mount(footer)
+
+show "Invariant Foundation (Lume Architecture) Booted."

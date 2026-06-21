@@ -1,0 +1,26 @@
+[
+  {
+    "timestamp": "2026-06-21T03:39:51.563Z",
+    "commit": "bc6d84d0",
+    "bundleSize": 13977,
+    "sourceLines": 117,
+    "buildTimeMs": 446,
+    "valid": false,
+    "errors": [
+      {
+        "stage": 1,
+        "error": "Invalid or unexpected token",
+        "sourceLine": null
+      },
+      {
+        "stage": 2,
+        "error": "Paren depth: 1, Brace depth: 0"
+      },
+      {
+        "stage": 3,
+        "error": "Invalid or unexpected token",
+        "sourceLine": 0
+      }
+    ]
+  }
+]
