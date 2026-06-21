@@ -1,0 +1,35 @@
+{
+  "name": "Meridian Canon — Wireless Energy Architecture",
+  "short_name": "Meridian",
+  "description": "Deterministic wireless energy routing architecture. Interactive prototype, 10 academic papers, and real-time beam simulation.",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#020208",
+  "theme_color": "#06b6d4",
+  "categories": ["science", "technology", "energy"],
+  "lang": "en-US",
+  "icons": [
+    {
+      "src": "/pwa/icon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any",
+      "purpose": "any"
+    },
+    {
+      "src": "/pwa/icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/pwa/splash.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Meridian Canon — Wireless Energy Routing"
+    }
+  ]
+}

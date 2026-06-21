@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lume-V Enterprise | Deterministic AI Governance & Validation-as-a-Service</title>
+    <meta name="description" content="Lume-V is an enterprise-grade deterministic middleware that mathematically secures legacy infrastructures and enforces strict safety invariants on AI models. Validation-as-a-Service from $299/mo." />
+    <meta name="keywords" content="AI safety, deterministic governance, validation as a service, AI invariants, trust certificates, Ed25519, enterprise AI, legacy infrastructure security, Lume, DarkWave Studios" />
+    <meta name="author" content="DarkWave Studios LLC" />
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- UNIVERSAL PWA BACK-BUTTON PATCH -->
+  <script>
+    window.addEventListener('load', function() {
+      if (window.history && window.history.pushState) {
+        window.history.pushState({ pwa: true }, '');
+        window.addEventListener('popstate', function(e) {
+          // 1. Dispatch Escape to close React/Radix/shadcn modals natively
+          window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', code: 'Escape', keyCode: 27, which: 27 }));
+          
+          // 2. Fallback: Force click any generic close buttons in the DOM
+          const modals = document.querySelectorAll('.modal, [role="dialog"], .overlay, .popup, [data-state="open"]');
+          let closed = false;
+          modals.forEach(m => {
+            const btn = m.querySelector('button.close, [aria-label="Close"], .close-button, [data-dismiss="modal"]');
+            if (btn && typeof btn.click === 'function') {
+              btn.click();
+              closed = true;
+            }
+          });
+          
+          // 3. Keep the user in the app by pushing state again
+          window.history.pushState({ pwa: true }, '');
+        });
+      }
+    });
+  </script>
+
+  <script type="module" crossorigin src="/assets/index-DGd-OCFR.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-DZfIufeQ.css">
+<link rel="manifest" href="/manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="/registerSW.js"></script></head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>

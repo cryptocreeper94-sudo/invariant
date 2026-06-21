@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" fill="#020208"/>
+  
+  <!-- 42-Node Ring -->
+  <g id="ring">
+    <circle cx="256" cy="66" r="5" fill="#06b6d4" opacity="0.85"/>
+    <circle cx="284.32" cy="68.12" r="5" fill="#06b6d4" opacity="0.85"/>
+    <circle cx="312" cy="74.44" r="5" fill="#06b6d4" opacity="0.85"/>
+    <circle cx="338.44" cy="84.82" r="5" fill="#06b6d4" opacity="0.85"/>
+    <circle cx="363.03" cy="99.01" r="5" fill="#06b6d4" opacity="0.85"/>
+    <circle cx="385.23" cy="116.72" r="5" fill="#06b6d4" opacity="0.85"/>
+    <circle cx="404.55" cy="137.54" r="5" fill="#06b6d4" opacity="0.85"/>
+    <circle cx="420.54" cy="161" r="5" fill="#06b6d4" opacity="0.85"/>
+    <circle cx="432.87" cy="186.59" r="5" fill="#06b6d4" opacity="0.85"/>
+    <circle cx="441.24" cy="213.72" r="5" fill="#06b6d4" opacity="0.85"/>
+    <circle cx="445.47" cy="241.8" r="5" fill="#06b6d4" opacity="0.85"/>
+    <circle cx="445.47" cy="270.2" r="5" fill="#06b6d4" opacity="0.85"/>
+    <circle cx="441.24" cy="298.28" r="5" fill="#06b6d4" opacity="0.85"/>
+    <circle cx="432.87" cy="325.41" r="5" fill="#06b6d4" opacity="0.85"/>
+    <circle cx="420.54" cy="351" r="5" fill="#06b6d4" opacity="0.85"/>
+    <circle cx="404.55" cy="374.46" r="5" fill="#06b6d4" opacity="0.85"/>
+    <circle cx="385.23" cy="395.28" r="5" fill="#06b6d4" opacity="0.85"/>
+    <circle cx="363.03" cy="412.99" r="5" fill="#06b6d4" opacity="0.85"/>
+    <circle cx="338.44" cy="427.18" r="5" fill="#06b6d4" opacity="0.85"/>
+    <circle cx="312" cy="437.56" r="5" fill="#06b6d4" opacity="0.85"/>
+    <circle cx="284.32" cy="443.88" r="5" fill="#06b6d4" opacity="0.85"/>
+    <circle cx="256" cy="446" r="5" fill="#06b6d4" opacity="0.85"/>
+    <circle cx="227.68" cy="443.88" r="5" fill="#06b6d4" opacity="0.85"/>
+    <circle cx="200" cy="437.56" r="5" fill="#06b6d4" opacity="0.85"/>
+    <circle cx="173.56" cy="427.18" r="5" fill="#06b6d4" opacity="0.85"/>
+    <circle cx="148.97" cy="412.99" r="5" fill="#06b6d4" opacity="0.85"/>
+    <circle cx="126.77" cy="395.28" r="5" fill="#06b6d4" opacity="0.85"/>
+    <circle cx="107.45" cy="374.46" r="5" fill="#06b6d4" opacity="0.85"/>
+    <circle cx="91.46" cy="351" r="5" fill="#06b6d4" opacity="0.85"/>
+    <circle cx="79.13" cy="325.41" r="5" fill="#06b6d4" opacity="0.85"/>
+    <circle cx="70.76" cy="298.28" r="5" fill="#06b6d4" opacity="0.85"/>
+    <circle cx="66.53" cy="270.2" r="5" fill="#06b6d4" opacity="0.85"/>
+    <circle cx="66.53" cy="241.8" r="5" fill="#06b6d4" opacity="0.85"/>
+    <circle cx="70.76" cy="213.72" r="5" fill="#06b6d4" opacity="0.85"/>
+    <circle cx="79.13" cy="186.59" r="5" fill="#06b6d4" opacity="0.85"/>
+    <circle cx="91.46" cy="161" r="5" fill="#06b6d4" opacity="0.85"/>
+    <circle cx="107.45" cy="137.54" r="5" fill="#06b6d4" opacity="0.85"/>
+    <circle cx="126.77" cy="116.72" r="5" fill="#06b6d4" opacity="0.85"/>
+    <circle cx="148.97" cy="99.01" r="5" fill="#06b6d4" opacity="0.85"/>
+    <circle cx="173.56" cy="84.82" r="5" fill="#06b6d4" opacity="0.85"/>
+    <circle cx="200" cy="74.44" r="5" fill="#06b6d4" opacity="0.85"/>
+    <circle cx="227.68" cy="68.12" r="5" fill="#06b6d4" opacity="0.85"/>
+  </g>
+  
+  <!-- Ring circle (subtle) -->
+  <circle cx="256" cy="256" r="190" fill="none" stroke="#06b6d4" stroke-width="0.5" opacity="0.15"/>
+  
+  <!-- 4-Axis Core -->
+  <g id="axes" stroke="#06b6d4" stroke-width="2.5" stroke-linecap="round">
+    <!-- Vertical -->
+    <line x1="256" y1="116" x2="256" y2="396"/>
+    <!-- Horizontal -->
+    <line x1="116" y1="256" x2="396" y2="256"/>
+  </g>
+  
+  <!-- Arrow Tips -->
+  <g fill="#06b6d4">
+    <!-- Top -->
+    <polygon points="256,104 250,118 262,118"/>
+    <!-- Bottom -->
+    <polygon points="256,408 250,394 262,394"/>
+    <!-- Left -->
+    <polygon points="104,256 118,250 118,262"/>
+    <!-- Right -->
+    <polygon points="408,256 394,250 394,262"/>
+  </g>
+  
+  <!-- Integrated M Letterform -->
+  <polyline points="216,291 216,226 236,261 256,226 276,261 296,226 296,291" 
+    fill="none" stroke="#06b6d4" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    
+  <!-- Center dot -->
+  <circle cx="256" cy="256" r="3" fill="#06b6d4" opacity="0.5"/>
+
+</svg>

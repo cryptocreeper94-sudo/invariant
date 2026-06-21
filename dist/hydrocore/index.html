@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HydroCore — Deterministic Hydraulic Governance Engine</title>
+<meta name="description" content="HydroCore: A deterministic hydraulic governance engine powered by the Lume 4/42 architecture. Patent 64/032,339 Pending.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+<link rel="stylesheet" href="style.css?v=20260511c">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#00E5FF">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" href="/pwa/icon.svg">
+<style>
+  .hero { background-image: url('hero-bg.png'); background-size: cover; background-position: center; }
+  .hero-canvas { mix-blend-mode: normal; }
+  .canvas-hint { position:absolute; bottom:12px; left:50%; transform:translateX(-50%); font:500 11px 'JetBrains Mono',monospace; color:rgba(255,255,255,0.4); pointer-events:none; z-index:2; }
+</style>
+</head>
+<body>
+<canvas id="ambient-particles"></canvas>
+<div class="ambient-orbs"><div class="amb-orb amb-orb-1"></div><div class="amb-orb amb-orb-2"></div><div class="amb-orb amb-orb-3"></div></div>
+<div class="ambient-grid"></div>
+<!-- Cockpit Status Bar -->
+<header class="hc-status">
+  <div class="hc-s-left">
+    <a href="#" class="hc-s-brand">
+      <div class="hc-s-hex">⬡</div>
+      <span class="hc-s-name">HYDROCORE</span>
+    </a>
+    <span class="hc-s-time" id="hc-clock"></span>
+  </div>
+  <div class="hc-s-center">
+    <div class="hc-s-metric"><div class="hc-s-dot"></div><span class="hc-s-val">42</span><span class="hc-s-label">Nodes</span></div>
+    <div class="hc-s-div"></div>
+    <div class="hc-s-metric"><span class="hc-s-val">4</span><span class="hc-s-label">Primitives</span></div>
+    <div class="hc-s-div"></div>
+    <div class="hc-s-metric"><span class="hc-s-val">100</span><span class="hc-s-label">Hz</span></div>
+    <div class="hc-s-div"></div>
+    <div class="hc-s-metric"><span class="hc-s-val" id="hc-mode" style="color:#22c55e">STABILITY</span><span class="hc-s-label">Mode</span></div>
+  </div>
+  <div class="hc-s-right">
+    <a href="#organism">Architecture</a>
+    <a href="#engine">Engine</a>
+    <a href="#drive">Drive</a>
+    <a href="#meridian">Meridian</a>
+    <a href="#steam">Steam</a>
+    <a href="#papers">Papers</a>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="hero" id="hero">
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-overlay">
+    <div class="hero-badge">PATENT 64/032,339 PENDING</div>
+    <h1 class="hero-title">HydroCore</h1>
+    <p class="hero-subtitle">Deterministic Hydraulic Governance Engine</p>
+    <p class="hero-claim" style="font:600 14px 'JetBrains Mono',monospace;color:#00E5FF;letter-spacing:0.08em;text-transform:uppercase;margin:-0.2em 0 1em;text-shadow:0 0 20px rgba(0,229,255,0.4)">The World's First Deterministic Closed-Loop Hydrogen Engine</p>
+    <p class="hero-desc">A 42-node deterministic engine that governs fluid systems with absolute determinism.<br>Same inputs. Same outputs. Always.</p>
+    <div class="hero-stats">
+      <div class="stat"><span class="stat-num" data-target="42">0</span><span class="stat-label">Governance Nodes</span></div>
+      <div class="stat"><span class="stat-num" data-target="4">0</span><span class="stat-label">Flow Primitives</span></div>
+      <div class="stat"><span class="stat-num" data-target="5">0</span><span class="stat-label">Operating Modes</span></div>
+      <div class="stat"><span class="stat-num" data-target="100">0</span><span class="stat-label">Hz Engine Rate</span></div>
+    </div>
+    <a href="#organism" class="hero-cta">Explore the Architecture ↓</a>
+  </div>
+</section>
+
+<!-- The Organism -->
+<section class="section" id="organism">
+  <div class="section-inner">
+    <div class="section-badge">LUME 4/42 ARCHITECTURE</div>
+    <h2 class="section-title">The Four Primitives</h2>
+    <p class="section-desc">Every HydroCore engine instance monitors four irreducible flow primitives simultaneously. The engine evaluates all 42 nodes in a single 10ms cycle and issues coherent, deterministic commands to all actuators from one unified output.</p>
+    <div class="primitives-grid">
+      <div class="primitive-card" style="--accent: #1565C0">
+        <div class="prim-icon">◉</div>
+        <h3>Flow Stability</h3>
+        <p class="prim-nodes">FS1–FS10 · 10 nodes</p>
+        <p class="prim-desc">Laminar stability, turbulence onset, cavitation risk, flow uniformity, vortex formation, shear stress, and flow safety index.</p>
+        <div class="prim-bar"><div class="prim-bar-fill" style="width:85%"></div></div>
+      </div>
+      <div class="primitive-card" style="--accent: #00695C">
+        <div class="prim-icon">◉</div>
+        <h3>Pressure Regulation</h3>
+        <p class="prim-nodes">PR1–PR10 · 10 nodes</p>
+        <p class="prim-desc">Chamber pressure, drift detection, surge suppression, backflow risk, oscillation damping, and pressure safety index.</p>
+        <div class="prim-bar"><div class="prim-bar-fill" style="width:78%"></div></div>
+      </div>
+      <div class="primitive-card" style="--accent: #B71C1C">
+        <div class="prim-icon">◉</div>
+        <h3>Thermal Balance</h3>
+        <p class="prim-nodes">TB1–TB11 · 11 nodes</p>
+        <p class="prim-desc">Temperature rise, thermal load, cooling efficiency, heat saturation, thermal drift, heat transfer efficiency, and thermal safety index.</p>
+        <div class="prim-bar"><div class="prim-bar-fill" style="width:92%"></div></div>
+      </div>
+      <div class="primitive-card" style="--accent: #607D8B">
+        <div class="prim-icon">◉</div>
+        <h3>Structural Load</h3>
+        <p class="prim-nodes">SL1–SL11 · 11 nodes</p>
+        <p class="prim-desc">Mechanical stress, vibration amplitude, resonance risk, fatigue accumulation, material flexion, and structural safety index.</p>
+        <div class="prim-bar"><div class="prim-bar-fill" style="width:88%"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Interactive 4/42 Organism Ring -->
+<section class="section" id="organism-ring">
+  <div class="section-inner" style="text-align:center">
+    <div class="section-badge">INTERACTIVE · LUME 4/42</div>
+    <h2 class="section-title">The Governance Ring</h2>
+    <p class="section-desc" style="margin:0 auto 24px">The 42-node polar ring is the signature visualization of every Lume engine. Adjust the sliders to see how HydroCore responds to changing flow conditions — same inputs, same outputs, every time.</p>
+    <div class="organism-ring-wrap">
+      <canvas id="organism-canvas" width="600" height="600"></canvas>
+      <div class="org-sliders" id="org-sliders">
+        <div class="org-slider-item" style="--sc:#1565C0">
+          <label>Flow Stability</label>
+          <input type="range" min="0" max="100" value="75" data-prim="0">
+          <span class="org-slider-val">0.33</span>
+        </div>
+        <div class="org-slider-item" style="--sc:#00695C">
+          <label>Pressure Regulation</label>
+          <input type="range" min="0" max="100" value="80" data-prim="1">
+          <span class="org-slider-val">0.44</span>
+        </div>
+        <div class="org-slider-item" style="--sc:#B71C1C">
+          <label>Thermal Balance</label>
+          <input type="range" min="0" max="100" value="70" data-prim="2">
+          <span class="org-slider-val">0.22</span>
+        </div>
+        <div class="org-slider-item" style="--sc:#607D8B">
+          <label>Structural Load</label>
+          <input type="range" min="0" max="100" value="85" data-prim="3">
+          <span class="org-slider-val">0.56</span>
+        </div>
+      </div>
+      <div class="org-mode-display" id="org-mode-display">
+        <span class="org-mode-dot" style="background:#22c55e"></span>
+        <span class="org-mode-name">STABILITY MODE</span>
+        <span class="org-mode-hash" id="org-hash">HC-75804085-S</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3D Engine Model -->
+<section class="section section-dark" id="engine">
+  <div class="section-inner">
+    <div class="section-badge">BENCH PROTOTYPE · ESP32-S3</div>
+    <h2 class="section-title">The Physical Engine</h2>
+    <p class="section-desc">A hydraulic machine governed in real time by the HydroCore engine. Not a conventional PID controller — a 42-node deterministic engine monitoring 4 physical flow primitives simultaneously.</p>
+  </div>
+  <div class="engine-viewer" style="position:relative">
+    <canvas id="engine-canvas" width="800" height="500"></canvas>
+    <div class="canvas-hint">Tap to fullscreen · Drag to orbit · Scroll to zoom</div>
+    <div class="engine-hud">
+      <div class="hud-mode"><span class="hud-dot"></span> STABILITY MODE</div>
+      <div class="hud-row">
+        <div class="hud-prim" style="--c:#1565C0"><span>FS</span> <span class="hud-val">0.72</span></div>
+        <div class="hud-prim" style="--c:#00695C"><span>PR</span> <span class="hud-val">0.61</span></div>
+        <div class="hud-prim" style="--c:#B71C1C"><span>TB</span> <span class="hud-val">0.88</span></div>
+        <div class="hud-prim" style="--c:#607D8B"><span>SL</span> <span class="hud-val">0.79</span></div>
+      </div>
+    </div>
+    <div class="engine-labels" id="engine-labels"></div>
+  </div>
+  <div class="section-inner">
+    <div class="specs-grid">
+      <div class="spec-card" style="--sc:#00E5FF" onclick="this.classList.toggle('spec-expanded')">
+        <h4>Controller</h4>
+        <p class="spec-mono">ESP32-S3 Dual Core 240MHz</p>
+        <p>FreeRTOS dual-core task model. Sensor task at 500Hz, engine at 100Hz, actuators at 200Hz.</p>
+        <div class="spec-detail">Core 0: Sensor polling + engine evaluation loop. Core 1: Actuator output + telemetry. PSRAM: 8MB for state history ring buffer. Wi-Fi 6 for remote diagnostics.</div>
+        <div class="spec-expand-hint">TAP TO EXPAND ↓</div>
+      </div>
+      <div class="spec-card" style="--sc:#1565C0" onclick="this.classList.toggle('spec-expanded')">
+        <h4>Sensors</h4>
+        <p class="spec-mono">6 Physical Sensors</p>
+        <p>Honeywell MPRLS pressure (×2), YF-S201 flow (×2), DS18B20 temperature, ADXL345 accelerometer.</p>
+        <div class="spec-detail">Pressure range: 0–25 PSI (0.5% accuracy). Flow rate: 1–30 L/min. Temperature: -55°C to +125°C. Vibration: ±16g tri-axis with 3200Hz output data rate.</div>
+        <div class="spec-expand-hint">TAP TO EXPAND ↓</div>
+      </div>
+      <div class="spec-card" style="--sc:#FFC107" onclick="this.classList.toggle('spec-expanded')">
+        <h4>Actuators</h4>
+        <p class="spec-mono">V1 · V2 · V3</p>
+        <p>Solenoid inlet/outlet valves with MOSFET drivers. Passive relief valve V3 for mechanical safety.</p>
+        <div class="spec-detail">V1 (Inlet): 12V NC solenoid, 5ms response. V2 (Outlet): 12V NO solenoid, 5ms response. V3 (Relief): Passive spring-loaded, opens at 20 PSI. All PWM-controlled at 200Hz.</div>
+        <div class="spec-expand-hint">TAP TO EXPAND ↓</div>
+      </div>
+      <div class="spec-card" style="--sc:#00695C" onclick="this.classList.toggle('spec-expanded')">
+        <h4>Prototype Cost</h4>
+        <p class="spec-mono">$150–$250 USD</p>
+        <p>Complete bench-scale prototype with all sensors, valves, controller, and enclosure.</p>
+        <div class="spec-detail">ESP32-S3: ~$8. Sensors: ~$45. Solenoid valves: ~$35. MOSFET drivers + wiring: ~$20. Enclosure + fittings: ~$40. Total BOM at volume: under $150.</div>
+        <div class="spec-expand-hint">TAP TO EXPAND ↓</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Vehicle Cutaway 3D -->
+<section class="section" id="vehicle-3d">
+  <div class="section-inner">
+    <div class="section-badge">VEHICLE INTEGRATION · 3D CUTAWAY</div>
+    <h2 class="section-title">HydroCore Drive — Vehicle Architecture</h2>
+    <p class="section-desc">The complete hydrogen-hybrid drivetrain as it would be engineered into a production vehicle. Six subsystems under unified engine governance — no subsystem acts independently.</p>
+    <div class="vtype-grid">
+      <button class="vtype-btn vtype-active" data-vtype="sedan">
+        <div class="vtype-bg" style="background-image:url('images/sedan.png')"></div>
+        <div class="vtype-overlay"></div>
+        <span class="vtype-label">SEDAN</span>
+      </button>
+      <button class="vtype-btn" data-vtype="sport">
+        <div class="vtype-bg" style="background-image:url('images/sport.png')"></div>
+        <div class="vtype-overlay"></div>
+        <span class="vtype-label">SPORT</span>
+      </button>
+      <button class="vtype-btn" data-vtype="suv">
+        <div class="vtype-bg" style="background-image:url('images/suv.png')"></div>
+        <div class="vtype-overlay"></div>
+        <span class="vtype-label">SUV</span>
+      </button>
+    </div>
+  </div>
+  <div class="vehicle-viewer" style="position:relative">
+    <canvas id="vehicle-canvas" width="800" height="500"></canvas>
+    <div class="canvas-hint">Tap to fullscreen · Drag to orbit · Scroll to zoom</div>
+    <div class="vehicle-hud">
+      <div class="vhud-label">H₂ BUFFER</div>
+      <div class="vhud-val">72%</div>
+      <div class="vhud-label" style="margin-top:8px">WATER</div>
+      <div class="vhud-val">3.2 gal</div>
+      <div class="vhud-label" style="margin-top:8px">MODE</div>
+      <div class="vhud-val" style="color:#22c55e">STABILITY</div>
+    </div>
+  </div>
+  <div class="section-inner" style="padding-top:16px">
+    <div style="display:flex;align-items:flex-start;gap:10px;padding:16px;border-radius:10px;background:rgba(0,229,255,0.04);border:1px solid rgba(0,229,255,0.12);max-width:680px;margin:0 auto 24px">
+      <span style="color:#00E5FF;font-size:16px;flex-shrink:0;margin-top:2px">◎</span>
+      <div>
+        <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;color:#00E5FF;margin-bottom:6px">LUME 4/42 ENGINE CORE</div>
+        <p style="font-size:12px;color:rgba(240,244,248,0.65);margin:0;line-height:1.7;font-family:'Inter',sans-serif">The dual rotating rings act as the deterministic governance brain, evaluating 4,200 thermodynamic states per second.<br><b style="color:rgba(255,255,255,0.8)">Outer Ring (Blue):</b> Tracks system pressure stability. &nbsp;<b style="color:rgba(255,255,255,0.8)">Inner Ring (Teal):</b> Monitors thermal flow gradients. &nbsp;<b style="color:rgba(255,255,255,0.8)">Core Coil (Gold):</b> Regulates electrical flux delivery to the motor.</p>
+      </div>
+    </div>
+  </div>
+  <div class="section-inner">
+    <h3 style="font-size:14px;font-weight:700;letter-spacing:0.08em;color:rgba(240,244,248,0.7);margin-bottom:16px">COMPONENT BREAKDOWN</h3>
+    <div class="comp-grid" id="comp-grid">
+      <div class="comp-card" data-comp="water" style="--accent:#1565C0">
+        <div class="comp-card-bg" style="background-image:url('images/water.png')"></div>
+        <div class="comp-card-content">
+          <div class="comp-card-header"><div class="comp-dot"></div><span class="comp-icon">↗</span></div>
+          <div class="comp-info"><div class="comp-name">Water Reservoir</div><div class="comp-spec">Onboard H₂O supply</div></div>
+          <div class="comp-tap-hint">TAP TO EXPLORE 3D ↗</div>
+        </div>
+      </div>
+      <div class="comp-card" data-comp="electrolyzer" style="--accent:#FFC107">
+        <div class="comp-card-bg" style="background-image:url('images/electrolyzer.png')"></div>
+        <div class="comp-card-content">
+          <div class="comp-card-header"><div class="comp-dot"></div><span class="comp-icon">↗</span></div>
+          <div class="comp-info"><div class="comp-name">PEM Electrolyzer</div><div class="comp-spec">H₂O → H₂ + O₂</div></div>
+          <div class="comp-tap-hint">TAP TO EXPLORE 3D ↗</div>
+        </div>
+      </div>
+      <div class="comp-card" data-comp="h2buffer" style="--accent:#00695C">
+        <div class="comp-card-bg" style="background-image:url('images/h2buffer.png')"></div>
+        <div class="comp-card-content">
+          <div class="comp-card-header"><div class="comp-dot"></div><span class="comp-icon">↗</span></div>
+          <div class="comp-info"><div class="comp-name">H₂ Buffer Tank</div><div class="comp-spec">10 bar pressurized</div></div>
+          <div class="comp-tap-hint">TAP TO EXPLORE 3D ↗</div>
+        </div>
+      </div>
+      <div class="comp-card" data-comp="fuelcell" style="--accent:#00E5FF">
+        <div class="comp-card-bg" style="background-image:url('images/fuelcell.png')"></div>
+        <div class="comp-card-content">
+          <div class="comp-card-header"><div class="comp-dot"></div><span class="comp-icon">↗</span></div>
+          <div class="comp-info"><div class="comp-name">PEM Fuel Cell</div><div class="comp-spec">H₂ → Electricity</div></div>
+          <div class="comp-tap-hint">TAP TO EXPLORE 3D ↗</div>
+        </div>
+      </div>
+      <div class="comp-card" data-comp="battery" style="--accent:#6A1B9A">
+        <div class="comp-card-bg" style="background-image:url('images/battery.png')"></div>
+        <div class="comp-card-content">
+          <div class="comp-card-header"><div class="comp-dot"></div><span class="comp-icon">↗</span></div>
+          <div class="comp-info"><div class="comp-name">Battery Pack</div><div class="comp-spec">Floor-mounted Li-ion</div></div>
+          <div class="comp-tap-hint">TAP TO EXPLORE 3D ↗</div>
+        </div>
+      </div>
+      <div class="comp-card" data-comp="motor" style="--accent:#607D8B">
+        <div class="comp-card-bg" style="background-image:url('images/motor.png')"></div>
+        <div class="comp-card-content">
+          <div class="comp-card-header"><div class="comp-dot"></div><span class="comp-icon">↗</span></div>
+          <div class="comp-info"><div class="comp-name">Electric Motor</div><div class="comp-spec">Rear-axle drive unit</div></div>
+          <div class="comp-tap-hint">TAP TO EXPLORE 3D ↗</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Component Modal -->
+<div class="comp-modal" id="comp-modal">
+  <div class="comp-modal-inner">
+    <button class="comp-modal-close" id="comp-modal-close">✕</button>
+    <canvas id="comp-modal-canvas" width="500" height="400"></canvas>
+    <h3 class="comp-modal-title" id="comp-modal-title"></h3>
+    <p class="comp-modal-desc" id="comp-modal-desc"></p>
+  </div>
+</div>
+
+<!-- HydroCore Drive -->
+<section class="section" id="drive">
+  <div class="section-inner">
+    <div class="section-badge">HYDROGEN-HYBRID ELECTRIC VEHICLE</div>
+    <h2 class="section-title">HydroCore Drive</h2>
+    <div style="display:inline-block;background:linear-gradient(135deg,rgba(0,229,255,0.12),rgba(0,105,92,0.12));border:1px solid rgba(0,229,255,0.25);border-radius:8px;padding:10px 20px;margin-bottom:1.2em;font:600 12px 'JetBrains Mono',monospace;color:#00E5FF;letter-spacing:0.05em;text-transform:uppercase">⚡ First Deterministic Closed-Loop Hydrogen Engine · Patent 64/032,339 Pending</div>
+    <p class="section-desc">Onboard hydrogen production governed by the HydroCore engine. The vehicle carries water, splits it via PEM electrolysis, feeds hydrogen to a fuel cell, and recovers exhaust water in a closed loop. No hydrogen station required.</p>
+    <div class="drive-flow">
+      <div class="flow-node fn-water">
+        <div class="fn-icon">💧</div>
+        <div class="fn-label">Water<br>Reservoir</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node fn-electro">
+        <div class="fn-icon">⚡</div>
+        <div class="fn-label">PEM<br>Electrolyzer</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node fn-h2">
+        <div class="fn-icon">H₂</div>
+        <div class="fn-label">Hydrogen<br>Buffer</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node fn-fuel">
+        <div class="fn-icon">🔋</div>
+        <div class="fn-label">Fuel Cell<br>Stack</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node fn-motor">
+        <div class="fn-icon">⚙️</div>
+        <div class="fn-label">Electric<br>Drivetrain</div>
+      </div>
+    </div>
+    <div class="flow-return">
+      <span class="flow-return-label">Water Recovery Loop ←</span>
+    </div>
+    <div class="drive-stats">
+      <div class="dstat"><span class="dstat-val">3–8%</span><span class="dstat-label">Faraday Efficiency Gain</span></div>
+      <div class="dstat"><span class="dstat-val">60–80</span><span class="dstat-label">Extra Miles/Hr (Meridian)</span></div>
+      <div class="dstat"><span class="dstat-val">10ms</span><span class="dstat-label">Full System Response</span></div>
+      <div class="dstat"><span class="dstat-val">0%</span><span class="dstat-label">H₂ Infrastructure Needed</span></div>
+    </div>
+    <div class="drive-modes">
+      <h3>Operating Modes</h3>
+      <div class="mode-list">
+        <div class="mode-item mode-safety"><span class="mode-dot"></span><strong>SAFETY</strong> — Any safety index critical, H₂ leak, or crash detected. Full shutdown.</div>
+        <div class="mode-item mode-recovery"><span class="mode-dot"></span><strong>RECOVERY</strong> — Thermal overrun or fatigue. Electrolyzer at 50%.</div>
+        <div class="mode-item mode-balance"><span class="mode-dot"></span><strong>BALANCE</strong> — Low H₂ and low battery. Optimal resource allocation.</div>
+        <div class="mode-item mode-power"><span class="mode-dot"></span><strong>POWER</strong> — Meridian input >8kW or regen >20kW. Max production.</div>
+        <div class="mode-item mode-stability"><span class="mode-dot"></span><strong>STABILITY</strong> — Default. Electrolyzer at 60% rated output.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Meridian Smart Roads -->
+<section class="section section-dark" id="meridian">
+  <div class="section-inner">
+    <div class="section-badge">ENGINE-TO-ENGINE COUPLING</div>
+    <h2 class="section-title">Meridian Smart Roads</h2>
+    <p class="section-desc">HydroCore Drive couples formally to the Meridian infrastructure engine — the first inter-engine coupling that spans the vehicle-infrastructure boundary. Two engines in different physical systems exchanging state and adjusting governance based on each other's outputs.</p>
+  </div>
+  <div class="road-viewer" style="position:relative">
+    <canvas id="road-canvas" width="800" height="500"></canvas>
+    <div class="canvas-hint">Tap to fullscreen · Drag to orbit · Scroll to zoom</div>
+    <div class="road-hud">
+      <div class="road-hud-item"><span class="rh-label">MERIDIAN INPUT</span>8.4 kW</div>
+      <div class="road-hud-item"><span class="rh-label">H₂ PRODUCTION</span>0.12 kg/hr</div>
+      <div class="road-hud-item"><span class="rh-label">MODE</span><span style="color:#22c55e">POWER</span></div>
+      <div class="road-hud-item"><span class="rh-label">RANGE EXTENSION</span>+68 mi/hr</div>
+    </div>
+  </div>
+  <div class="section-inner">
+      <div class="coupling-diagram">
+        <div class="coupling-node cn-meridian">
+          <div class="cn-title">Meridian</div>
+          <div class="cn-sub">Road Infrastructure Engine</div>
+          <div class="cn-detail">LD3 Allocation Efficiency<br>allocated_power_kw</div>
+        </div>
+        <div class="coupling-arrows">
+          <div class="ca-right">Power Allocation →<br><span>PR8, FS9, TB10</span></div>
+          <div class="ca-left">← Demand Signal<br><span>Electrolyzer demand</span></div>
+        </div>
+        <div class="coupling-node cn-hydrocore">
+          <div class="cn-title">HydroCore Drive</div>
+          <div class="cn-sub">Vehicle Engine</div>
+          <div class="cn-detail">42-node engine state<br>Mode + actuator commands</div>
+        </div>
+      </div>
+    </div>
+    <div class="v2g-note">
+      <strong>V2G Capability:</strong> Vehicles with surplus H₂ buffer (>90%) and high battery SOC reverse the coupling — fuel cell output feeds back to the Meridian node, providing grid support. A fleet of 1,000 vehicles = 3–15 MW controllable V2G capacity.
+    </div>
+  </div>
+</section>
+
+<!-- HydroCore Steam -->
+<section class="section" id="steam">
+  <div class="section-inner">
+    <div class="section-badge">INDUSTRIAL STEAM POWER · 80% OF GLOBAL ELECTRICITY</div>
+    <h2 class="section-title">HydroCore Steam</h2>
+    <p class="section-desc">Steam turbines generate approximately 80% of global electricity — nuclear, coal, natural gas, and concentrated solar. Every one of these systems is a fluid-pressure plant governed by the same four primitives that HydroCore governs natively. The engine architecture requires no modification. The physics is the same.</p>
+  </div>
+  <div class="steam-viewer" style="position:relative">
+    <canvas id="steam-canvas" width="800" height="500"></canvas>
+    <div class="canvas-hint">Tap to fullscreen · Drag to orbit · Scroll to zoom</div>
+    <div class="steam-hud" style="position:absolute;top:16px;left:16px;z-index:2;display:flex;gap:18px">
+      <div style="text-align:center">
+        <div style="font:500 10px 'JetBrains Mono',monospace;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.1em">Steam Temp</div>
+        <div class="shud-val" style="font:700 18px 'JetBrains Mono',monospace;color:#D84315">695°C</div>
+      </div>
+      <div style="text-align:center">
+        <div style="font:500 10px 'JetBrains Mono',monospace;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.1em">Pressure</div>
+        <div class="shud-val" style="font:700 18px 'JetBrains Mono',monospace;color:#FFC107">25.4 MPa</div>
+      </div>
+      <div style="text-align:center">
+        <div style="font:500 10px 'JetBrains Mono',monospace;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.1em">Output</div>
+        <div class="shud-val" style="font:700 18px 'JetBrains Mono',monospace;color:#00E5FF">991 MW</div>
+      </div>
+    </div>
+  </div>
+  <div class="section-inner">
+    <h3 style="font-size:14px;font-weight:700;letter-spacing:0.08em;color:rgba(240,244,248,0.7);margin-bottom:16px">COMPONENT BREAKDOWN</h3>
+    <div class="comp-grid">
+      <div class="comp-card" data-comp="boiler" style="--accent:#B71C1C">
+        <div class="comp-card-bg" style="background-image:url('images/boiler.png')"></div>
+        <div class="comp-card-content">
+          <div class="comp-card-header"><div class="comp-dot"></div><span class="comp-icon">↗</span></div>
+          <div class="comp-info"><div class="comp-name">Boiler / Steam Generator</div><div class="comp-spec">Heat source → steam at 25+ MPa. Nuclear, coal, gas, or solar thermal input. Engine-governed temperature and pressure ramp.</div></div>
+          <div class="comp-tap-hint">TAP TO EXPLORE 3D ↗</div>
+        </div>
+      </div>
+      <div class="comp-card" data-comp="superheater" style="--accent:#D84315">
+        <div class="comp-card-bg" style="background-image:url('images/superheater.png')"></div>
+        <div class="comp-card-content">
+          <div class="comp-card-header"><div class="comp-dot"></div><span class="comp-icon">↗</span></div>
+          <div class="comp-info"><div class="comp-name">Superheater / Reheater</div><div class="comp-spec">Steam to 700°C supercritical. Pseudocritical transition management. SL5 creep monitoring on tube banks.</div></div>
+          <div class="comp-tap-hint">TAP TO EXPLORE 3D ↗</div>
+        </div>
+      </div>
+      <div class="comp-card" data-comp="turbine" style="--accent:#607D8B">
+        <div class="comp-card-bg" style="background-image:url('images/turbine.png')"></div>
+        <div class="comp-card-content">
+          <div class="comp-card-header"><div class="comp-dot"></div><span class="comp-icon">↗</span></div>
+          <div class="comp-info"><div class="comp-name">HP / LP Turbine Stages</div><div class="comp-spec">High-pressure + low-pressure expansion stages. 3,000 RPM shaft. Blade erosion monitoring. Exhaust to condenser.</div></div>
+          <div class="comp-tap-hint">TAP TO EXPLORE 3D ↗</div>
+        </div>
+      </div>
+      <div class="comp-card" data-comp="generator" style="--accent:#FFC107">
+        <div class="comp-card-bg" style="background-image:url('images/generator.png')"></div>
+        <div class="comp-card-content">
+          <div class="comp-card-header"><div class="comp-dot"></div><span class="comp-icon">↗</span></div>
+          <div class="comp-info"><div class="comp-name">Generator</div><div class="comp-spec">1 GW synchronous generator. Copper windings, excitation control, grid synchronization. Full power output governance.</div></div>
+          <div class="comp-tap-hint">TAP TO EXPLORE 3D ↗</div>
+        </div>
+      </div>
+      <div class="comp-card" data-comp="condenser" style="--accent:#1565C0">
+        <div class="comp-card-bg" style="background-image:url('images/condenser.png')"></div>
+        <div class="comp-card-content">
+          <div class="comp-card-header"><div class="comp-dot"></div><span class="comp-icon">↗</span></div>
+          <div class="comp-info"><div class="comp-name">Condenser</div><div class="comp-spec">Steam → water phase transition. Cooling water management. Vacuum maintenance. Thermal rejection governance.</div></div>
+          <div class="comp-tap-hint">TAP TO EXPLORE 3D ↗</div>
+        </div>
+      </div>
+      <div class="comp-card" data-comp="feedwater" style="--accent:#00695C">
+        <div class="comp-card-bg" style="background-image:url('images/feedwater.png')"></div>
+        <div class="comp-card-content">
+          <div class="comp-card-header"><div class="comp-dot"></div><span class="comp-icon">↗</span></div>
+          <div class="comp-info"><div class="comp-name">Feedwater Pump</div><div class="comp-spec">Water return to boiler. Closed Rankine cycle. Deaeration, preheating. Flow rate governed by engine demand signal.</div></div>
+          <div class="comp-tap-hint">TAP TO EXPLORE 3D ↗</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="section-inner">
+    <div class="drive-stats" style="margin-top:2em">
+      <div class="dstat"><span class="dstat-val">22,400</span><span class="dstat-label">TWh/yr Governed Domain</span></div>
+      <div class="dstat"><span class="dstat-val">224</span><span class="dstat-label">TWh Savings at 1%</span></div>
+      <div class="dstat"><span class="dstat-val">150M</span><span class="dstat-label">Tonnes CO₂ Avoided</span></div>
+      <div class="dstat"><span class="dstat-val">500</span><span class="dstat-label">Hz Governance Rate</span></div>
+    </div>
+    <div class="spec-grid" style="margin-top:2em">
+      <div class="spec-card" style="--sc:#D84315" onclick="this.classList.toggle('spec-expanded')">
+        <div class="spec-card-header"><span class="sc-title">Steam Conditions</span><span class="sc-arrow">▸</span></div>
+        <div class="spec-card-body">
+          <div class="sc-row"><span>Max Temperature</span><span>700°C (supercritical)</span></div>
+          <div class="sc-row"><span>Max Pressure</span><span>300+ bar (25.4 MPa)</span></div>
+          <div class="sc-row"><span>Turbine Speed</span><span>3,000 RPM synchronous</span></div>
+          <div class="sc-row"><span>Phase Management</span><span>Pseudocritical transition</span></div>
+        </div>
+      </div>
+      <div class="spec-card" style="--sc:#FFC107" onclick="this.classList.toggle('spec-expanded')">
+        <div class="spec-card-header"><span class="sc-title">Power Output</span><span class="sc-arrow">▸</span></div>
+        <div class="spec-card-body">
+          <div class="sc-row"><span>Generator Capacity</span><span>1 GW (1,000 MW)</span></div>
+          <div class="sc-row"><span>Thermal Efficiency</span><span>42–47% (USC)</span></div>
+          <div class="sc-row"><span>Governance Cycle</span><span>500 Hz deterministic</span></div>
+          <div class="sc-row"><span>Grid Sync</span><span>50/60 Hz ± 0.01 Hz</span></div>
+        </div>
+      </div>
+      <div class="spec-card" style="--sc:#00E5FF" onclick="this.classList.toggle('spec-expanded')">
+        <div class="spec-card-header"><span class="sc-title">Safety Governance</span><span class="sc-arrow">▸</span></div>
+        <div class="spec-card-body">
+          <div class="sc-row"><span>Creep Monitoring</span><span>SL5 continuous</span></div>
+          <div class="sc-row"><span>Thermal Runaway</span><span>Mandatory shutdown</span></div>
+          <div class="sc-row"><span>Blade Erosion</span><span>42-node real-time</span></div>
+          <div class="sc-row"><span>Clinical Escalation</span><span>Auto-scram interlock</span></div>
+        </div>
+      </div>
+      <div class="spec-card" style="--sc:#00695C" onclick="this.classList.toggle('spec-expanded')">
+        <div class="spec-card-header"><span class="sc-title">Engine Architecture</span><span class="sc-arrow">▸</span></div>
+        <div class="spec-card-body">
+          <div class="sc-row"><span>Nodes</span><span>42 (same as HydroCore)</span></div>
+          <div class="sc-row"><span>Primitives</span><span>4: Thermal · Pressure · Flow · Integrity</span></div>
+          <div class="sc-row"><span>Modes</span><span>SAFETY → RECOVERY → BALANCE → POWER → STABILITY</span></div>
+          <div class="sc-row"><span>Coupling</span><span>Grid engine ↔ Steam engine</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="drive-modes" style="margin-top:2em">
+      <h3>Operating Modes</h3>
+      <div class="mode-list">
+        <div class="mode-item mode-safety"><span class="mode-dot"></span><strong>SAFETY</strong> — Thermal runaway, tube rupture, or SL5 creep limit. Emergency scram. No override.</div>
+        <div class="mode-item mode-recovery"><span class="mode-dot"></span><strong>RECOVERY</strong> — Thermal cycling fatigue or pressure excursion. Reduce to 60% load.</div>
+        <div class="mode-item mode-balance"><span class="mode-dot"></span><strong>BALANCE</strong> — Variable input (CSP cloud passage). Simultaneous multi-variable transient governance.</div>
+        <div class="mode-item mode-power"><span class="mode-dot"></span><strong>POWER</strong> — Full load demand. Supercritical operation. Maximum efficiency target.</div>
+        <div class="mode-item mode-stability"><span class="mode-dot"></span><strong>STABILITY</strong> — Default. Steady-state baseload. All 42 nodes nominal.</div>
+      </div>
+    </div>
+    <h3 style="color:#D84315;font:700 18px 'Inter',sans-serif;margin:2em 0 0.8em;text-transform:uppercase;letter-spacing:0.08em">Applications</h3>
+    <div class="primitives-grid">
+      <div class="primitive-card" style="--accent: #00695C">
+        <div class="prim-icon">☢</div>
+        <h3>Nuclear PWR / BWR</h3>
+        <p class="prim-desc">Pressurized water and boiling water reactor steam cycles. Reduces spurious trips, improves load-following, continuous SL5 creep monitoring.</p>
+      </div>
+      <div class="primitive-card" style="--accent: #B71C1C">
+        <div class="prim-icon">🔥</div>
+        <h3>Ultra-Supercritical Coal & Gas</h3>
+        <p class="prim-desc">Supercritical steam at 700°C / 300+ bar. Pseudocritical transition management. Largest near-term deployment opportunity.</p>
+      </div>
+      <div class="primitive-card" style="--accent: #FFC107">
+        <div class="prim-icon">☀</div>
+        <h3>Concentrated Solar Power</h3>
+        <p class="prim-desc">BALANCE MODE manages variable solar input. Continuous multi-variable transient governance during cloud passages.</p>
+      </div>
+      <div class="primitive-card" style="--accent: #607D8B">
+        <div class="prim-icon">🏭</div>
+        <h3>Industrial Process Steam</h3>
+        <p class="prim-desc">Chemical, petrochemical, paper, food processing. Same four primitives at lower pressure with simplified parameterization.</p>
+      </div>
+    </div>
+    <div style="margin-top:2em;padding:1.2em 1.5em;background:rgba(216,67,21,0.06);border:1px solid rgba(216,67,21,0.2);border-radius:10px;font:400 14px/1.7 'Inter',sans-serif;color:rgba(255,255,255,0.7)">
+      <strong style="color:#D84315">Supercritical Steam Analogy:</strong> Above 374°C and 218 atm, water enters a supercritical state — no phase boundary, liquid-like density with gas-like compressibility. The control challenge is analogous to magnetically confined plasma in a tokamak. HydroCore's simultaneous multi-variable governance is the deterministic answer to this challenge.
+    </div>
+    <p style="margin-top:1.5em;font:400 13px/1.6 'Inter',sans-serif;color:rgba(255,255,255,0.45)">Full specification: <em>HydroCore Steam: Deterministic Governance of Industrial Steam Power Systems via the Lume 4/42 Synthetic Organism Architecture</em> — L-SOC Paper Series, Physical Instantiation Volume III. DOI pending Zenodo.</p>
+  </div>
+</section>
+
+<!-- Papers -->
+<section class="section" id="papers">
+  <div class="section-inner">
+    <div class="section-badge">CANON² PAPER SERIES</div>
+    <h2 class="section-title">Published Research</h2>
+    <p class="section-desc">All papers authored by Jason Andrews / DarkWave Studios LLC. ORCID: 0009-0007-5214-649X</p>
+    <div class="papers-list">
+      <div class="paper-card">
+        <div class="paper-type">Canon² · Hydrological</div>
+        <h4>HydroCore: Deterministic Hydrological Flow Organism</h4>
+        <p>Water routing, pressure governance, purity safety, thermal management. 42-node spec.</p>
+        <span class="paper-doi">DOI: Pending Zenodo</span>
+      </div>
+      <div class="paper-card">
+        <div class="paper-type">Canon² · Physical Vol. I</div>
+        <h4>HydroCore Physical: Deterministic Hydraulic Governance</h4>
+        <p>Bench-scale physical instantiation. Sensor mapping, normalization functions, mode selection.</p>
+        <span class="paper-doi">DOI: Pending Zenodo</span>
+      </div>
+      <div class="paper-card">
+        <div class="paper-type">Canon² · Physical Vol. II</div>
+        <h4>HydroCore Drive: Hydrogen-Hybrid Electric Vehicle</h4>
+        <p>Onboard H₂ production via PEM electrolysis. Meridian coupling. 3–8% Faraday efficiency gain.</p>
+        <span class="paper-doi">DOI: Pending Zenodo</span>
+      </div>
+      <div class="paper-card">
+        <div class="paper-type">Canon² · Physical Vol. III</div>
+        <h4>HydroCore Steam: Deterministic Governance of Industrial Steam Power Systems</h4>
+        <p>Steam turbine governance via Lume 4/42. Nuclear, USC coal, concentrated solar. 42-node mapping. Supercritical steam. Thermal creep SL5.</p>
+        <span class="paper-doi">DOI: Pending Zenodo</span>
+      </div>
+      <div class="paper-card">
+        <div class="paper-type">Canon² · Interaction</div>
+        <h4>Tri-Organism Geometry: Formal Interaction Framework</h4>
+        <p>2D/3D geometry, pairwise channels, cross-node coupling for Meridian / Verdara Ultra / HydroCore.</p>
+        <span class="paper-doi">DOI: Pending Zenodo</span>
+      </div>
+    </div>
+    <div class="ecosystem-links">
+      <h3>Lume Ecosystem DOIs</h3>
+      <div class="doi-grid">
+        <a href="https://doi.org/10.5281/zenodo.19382282" class="doi-link">Lume Language Spec <span>10.5281/zenodo.19382282</span></a>
+        <a href="https://doi.org/10.5281/zenodo.19560674" class="doi-link">Trust Layer <span>10.5281/zenodo.19560674</span></a>
+        <a href="https://doi.org/10.5281/zenodo.19491784" class="doi-link">DAIGS <span>10.5281/zenodo.19491784</span></a>
+        <a href="https://doi.org/10.5281/zenodo.19645097" class="doi-link">Lume-V <span>10.5281/zenodo.19645097</span></a>
+        <a href="https://doi.org/10.5281/zenodo.19443968" class="doi-link">Lume-X <span>10.5281/zenodo.19443968</span></a>
+        <a href="https://doi.org/10.5281/zenodo.15065493" class="doi-link">Dissolution <span>10.5281/zenodo.15065493</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Legal Bar -->
+<footer class="hc-legal">
+  <div class="hc-legal-brand">⬡ HydroCore · DarkWave Studios LLC</div>
+  <div class="hc-legal-links">
+    <a href="https://lume42.com">lume42.com</a>
+    <a href="https://meridiancanon.com">meridiancanon.com</a>
+    <a href="https://verdaraultra.com">verdaraultra.com</a>
+    <a href="https://lume-lang.org">lume-lang.org</a>
+    <a href="https://lume-cortex.com">lume-cortex.com</a>
+    <a href="https://dwtl.io">dwtl.io</a>
+  </div>
+  <div class="hc-legal-copy">© 2026 Jason Andrews / DarkWave Studios LLC · Patent 64/032,339 · 64/056,378 Pending · All Rights Reserved</div>
+</footer>
+
+<!-- Cockpit Dock (mobile) -->
+<nav class="hc-dock" id="hc-dock">
+  <div class="hc-dock-pill">
+    <a href="#hero" class="hc-d-active"><span>⬡</span><span>Home</span></a>
+    <a href="#organism"><span>◎</span><span>Architecture</span></a>
+    <a href="#engine"><span>⚙</span><span>Engine</span></a>
+    <a href="#drive"><span>⚡</span><span>Drive</span></a>
+    <a href="#steam"><span>♨</span><span>Steam</span></a>
+    <a href="#papers"><span>📄</span><span>Papers</span></a>
+  </div>
+</nav>
+
+<script>
+// Three.js r128 makes position/rotation/scale read-only.
+// Object.assign crashes on them. This helper uses .copy() instead.
+function assignProps(obj, props) {
+  for (var key in props) {
+    if (!props.hasOwnProperty(key)) continue;
+    try { obj[key] = props[key]; }
+    catch(e) {
+      if (obj[key] && typeof obj[key].copy === 'function') obj[key].copy(props[key]);
+    }
+  }
+  return obj;
+}
+</script>
+<script src="engine3d.js?v=20260510bb"></script>
+<script src="vehicle3d.js?v=20260511c"></script>
+<script src="steam3d.js?v=20260511a"></script>
+<script src="organism3d.js?v=20260510"></script>
+<script src="main.js?v=20260511b"></script>
+
+<!-- Fullscreen 3D Viewer Modal -->
+<div class="fs-viewer-modal" id="fs-viewer-modal">
+  <button class="fs-viewer-close" id="fs-viewer-close" title="Close fullscreen">✕</button>
+  <div class="fs-viewer-content" id="fs-viewer-content"></div>
+</div>
+
+<script>
+if (typeof THREE === 'undefined') {
+  document.querySelectorAll('.engine-viewer, .vehicle-viewer, .road-viewer, .steam-viewer').forEach(function(el) {
+    el.style.display = 'flex'; el.style.alignItems = 'center'; el.style.justifyContent = 'center';
+    el.innerHTML = '<p style="color:#ef4444;font-size:14px;text-align:center">3D engine failed to load.<br>Three.js CDN may be blocked.</p>';
+  });
+}
+
+// Fullscreen 3D Viewer
+(function() {
+  var modal = document.getElementById('fs-viewer-modal');
+  var content = document.getElementById('fs-viewer-content');
+  var closeBtn = document.getElementById('fs-viewer-close');
+  var origParent = null;
+  var origCanvas = null;
+  var origNextSib = null;
+
+  function openFullscreen(canvas) {
+    origCanvas = canvas;
+    origParent = canvas.parentElement;
+    origNextSib = canvas.nextSibling;
+    content.appendChild(canvas);
+    canvas.style.width = '100%';
+    canvas.style.height = '100%';
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    // Trigger resize so Three.js updates
+    window.dispatchEvent(new Event('resize'));
+  }
+
+  function closeFullscreen() {
+    if (!origCanvas) return;
+    if (origNextSib) {
+      origParent.insertBefore(origCanvas, origNextSib);
+    } else {
+      origParent.appendChild(origCanvas);
+    }
+    origCanvas.style.width = '';
+    origCanvas.style.height = '';
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+    window.dispatchEvent(new Event('resize'));
+    origCanvas = null;
+    origParent = null;
+    origNextSib = null;
+  }
+
+  closeBtn.addEventListener('click', closeFullscreen);
+  modal.addEventListener('click', function(e) {
+    if (e.target === modal) closeFullscreen();
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && modal.classList.contains('active')) closeFullscreen();
+  });
+
+  // Re-trigger resize when device rotates so Three.js recalculates aspect ratio
+  window.addEventListener('orientationchange', function() {
+    if (modal.classList.contains('active')) {
+      setTimeout(function() { window.dispatchEvent(new Event('resize')); }, 300);
+    }
+  });
+  if (screen.orientation) {
+    screen.orientation.addEventListener('change', function() {
+      if (modal.classList.contains('active')) {
+        setTimeout(function() { window.dispatchEvent(new Event('resize')); }, 300);
+      }
+    });
+  }
+
+  // Add expand buttons AND make entire viewer tap-to-fullscreen
+  document.querySelectorAll('.engine-viewer, .vehicle-viewer, .road-viewer, .steam-viewer').forEach(function(viewer) {
+    // Small corner expand button
+    var expandBtn = document.createElement('button');
+    expandBtn.className = 'fs-expand-btn';
+    expandBtn.innerHTML = '⛶';
+    expandBtn.title = 'Fullscreen 3D View';
+    viewer.appendChild(expandBtn);
+    expandBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var canvas = viewer.querySelector('canvas');
+      if (canvas) openFullscreen(canvas);
+    });
+
+    // Tap anywhere on the canvas to go fullscreen (not on HUD elements)
+    var canvas = viewer.querySelector('canvas');
+    if (canvas) {
+      canvas.style.cursor = 'pointer';
+      var tapStartX, tapStartY, tapStartTime;
+      canvas.addEventListener('pointerdown', function(e) {
+        tapStartX = e.clientX; tapStartY = e.clientY;
+        tapStartTime = Date.now();
+      });
+      canvas.addEventListener('pointerup', function(e) {
+        var dx = Math.abs(e.clientX - tapStartX);
+        var dy = Math.abs(e.clientY - tapStartY);
+        var dt = Date.now() - tapStartTime;
+        // Only treat as tap if minimal movement and < 300ms (not an orbit drag)
+        if (dx < 6 && dy < 6 && dt < 300) {
+          // Don't trigger if we're already in fullscreen
+          if (!modal.classList.contains('active')) {
+            openFullscreen(canvas);
+          }
+        }
+      });
+    }
+  });
+})();
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('/sw.js').then(function(reg) {
+      console.log('[HydroCore] SW registered:', reg.scope);
+    }).catch(function(err) {
+      console.warn('[HydroCore] SW registration failed:', err);
+    });
+  });
+}
+</script>
+
+
+<!-- Made with Lume -->
+<a href="https://lume-lang.org" target="_blank" rel="noopener" id="lume-badge" style="position:fixed;bottom:12px;right:12px;display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:rgba(2,6,23,0.88);border:1px solid rgba(34,211,238,0.3);border-radius:20px;color:#22d3ee;font-size:11px;font-weight:700;text-decoration:none;z-index:9999;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);transition:all 0.3s;font-family:Inter,system-ui,sans-serif;letter-spacing:0.02em;box-shadow:0 2px 12px rgba(0,0,0,0.3);">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22d3ee" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+  Made with Lume
+</a>
+</body>
+</html>
+
