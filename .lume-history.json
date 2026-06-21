@@ -49,5 +49,146 @@
     "buildTimeMs": 322,
     "valid": true,
     "errors": []
+  },
+  {
+    "timestamp": "2026-06-21T04:35:14.008Z",
+    "commit": "fa6eb64e",
+    "bundleSize": 19344,
+    "sourceLines": 180,
+    "buildTimeMs": 300,
+    "valid": true,
+    "errors": []
+  },
+  {
+    "timestamp": "2026-06-21T04:46:45.844Z",
+    "commit": "596222eb",
+    "bundleSize": 24076,
+    "sourceLines": 267,
+    "buildTimeMs": 401,
+    "valid": false,
+    "errors": [
+      {
+        "stage": 1,
+        "error": "Invalid or unexpected token",
+        "sourceLine": null
+      },
+      {
+        "stage": 2,
+        "error": "Paren depth: 1, Brace depth: 1"
+      },
+      {
+        "stage": 3,
+        "error": "Invalid or unexpected token",
+        "sourceLine": 200
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-06-21T04:58:42.867Z",
+    "commit": "a2356505",
+    "bundleSize": 24076,
+    "sourceLines": 267,
+    "buildTimeMs": 361,
+    "valid": false,
+    "errors": [
+      {
+        "stage": 1,
+        "error": "Invalid or unexpected token",
+        "sourceLine": null
+      },
+      {
+        "stage": 2,
+        "error": "Paren depth: 1, Brace depth: 1"
+      },
+      {
+        "stage": 3,
+        "error": "Invalid or unexpected token",
+        "sourceLine": 200
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-06-21T05:11:11.314Z",
+    "commit": "a2356505",
+    "bundleSize": 24095,
+    "sourceLines": 267,
+    "buildTimeMs": 377,
+    "valid": false,
+    "errors": [
+      {
+        "stage": 1,
+        "error": "Invalid or unexpected token",
+        "sourceLine": null
+      },
+      {
+        "stage": 2,
+        "error": "Paren depth: 1, Brace depth: 1"
+      },
+      {
+        "stage": 3,
+        "error": "Invalid or unexpected token",
+        "sourceLine": 200
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-06-21T05:18:03.627Z",
+    "commit": "d51c10b4",
+    "bundleSize": 24298,
+    "sourceLines": 267,
+    "buildTimeMs": 271,
+    "valid": false,
+    "errors": [
+      {
+        "stage": 1,
+        "error": "Invalid or unexpected token",
+        "sourceLine": null
+      },
+      {
+        "stage": 2,
+        "error": "Paren depth: 1, Brace depth: 1"
+      },
+      {
+        "stage": 3,
+        "error": "Invalid or unexpected token",
+        "sourceLine": 200
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-06-21T05:41:34.405Z",
+    "commit": "42c14885",
+    "bundleSize": 14131,
+    "sourceLines": 128,
+    "buildTimeMs": 2352,
+    "valid": true,
+    "errors": []
+  },
+  {
+    "timestamp": "2026-06-21T06:31:38.517Z",
+    "commit": "9021e98c",
+    "bundleSize": 14891,
+    "sourceLines": 128,
+    "buildTimeMs": 300,
+    "valid": true,
+    "errors": []
+  },
+  {
+    "timestamp": "2026-06-21T07:36:16.242Z",
+    "commit": "ac323f2d",
+    "bundleSize": 15077,
+    "sourceLines": 128,
+    "buildTimeMs": 254,
+    "valid": true,
+    "errors": []
+  },
+  {
+    "timestamp": "2026-06-21T15:48:05.870Z",
+    "commit": "f013a7d4",
+    "bundleSize": 15077,
+    "sourceLines": 128,
+    "buildTimeMs": 1449,
+    "valid": true,
+    "errors": []
   }
 ]

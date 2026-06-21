@@ -93,82 +93,22 @@ const state = {
 
 // ═══ Application Code ═══
 
-dom.inject_css(`
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&family=Inter:wght@400;500;700&display=swap');
 
-:root {
-  --bg-primary: #050505;
-  --bg-secondary: #111111;
-  --text-primary: #FFFFFF;
-  --text-secondary: #888888;
-  --border: #333333;
-  --font-heading: 'Outfit', sans-serif;
-  --font-body: 'Inter', sans-serif;
-}
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { background-color: var(--bg-primary); color: var(--text-primary); font-family: var(--font-body); line-height: 1.6; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+// Noise Injection
+const noise = dom.create("div", { className: "noise" })
+dom.mount(noise)
 
-h1, h2, h3, h4 { font-family: var(--font-heading); text-transform: uppercase; letter-spacing: -0.03em; font-weight: 900; line-height: 1.1; margin-bottom: 0.5em; }
-
-.title-monolith { font-size: clamp(3rem, 8vw, 8rem); color: var(--text-primary); max-width: 1200px; margin: 0 auto; position: relative; z-index: 10; }
-.text-stark { font-family: var(--font-body); font-size: clamp(1.2rem, 2vw, 1.5rem); color: var(--text-secondary); font-weight: 400; max-width: 800px; }
-.container { width: 100%; max-width: 1400px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 10; }
-.section { padding: 120px 0; border-bottom: 1px solid var(--border); position: relative; overflow: hidden; }
-.section-dark { background-color: var(--bg-primary); }
-.section-light { background-color: var(--text-primary); color: var(--bg-primary); }
-.section-light h2 { color: var(--bg-primary); }
-
-/* Ken Burns Hero */
-.hero-sec { min-height: 90vh; display: flex; align-items: center; position: relative; overflow: hidden; }
-.hero-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; background-size: cover; background-position: center; opacity: 0; animation: kenburns 24s infinite; }
-.hero-bg:nth-child(1) { background-image: url('/assets/hero_bg_1.png'); animation-delay: 0s; }
-.hero-bg:nth-child(2) { background-image: url('/assets/hero_bg_2.png'); animation-delay: 8s; }
-.hero-bg:nth-child(3) { background-image: url('/assets/hero_bg_3.png'); animation-delay: 16s; }
-.hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5,5,5,0.7); z-index: 2; }
-
-@keyframes kenburns {
-  0% { opacity: 0; transform: scale(1); }
-  10% { opacity: 1; }
-  25% { opacity: 1; }
-  33% { opacity: 0; transform: scale(1.1); }
-  100% { opacity: 0; transform: scale(1.1); }
-}
-
-/* Carousel */
-.carousel-track { display: flex; gap: 32px; overflow-x: auto; padding: 64px 24px; scroll-snap-type: x mandatory; scrollbar-width: none; -ms-overflow-style: none; margin: 0 calc(-50vw + 50%); width: 100vw; }
-.carousel-track::-webkit-scrollbar { display: none; }
-.carousel-card { flex: 0 0 450px; scroll-snap-align: center; background-color: var(--bg-secondary); border: 1px solid var(--border); transition: all 0.3s ease; cursor: pointer; display: flex; flex-direction: column; text-decoration: none; position: relative; overflow: hidden; }
-.carousel-card:hover { transform: translateY(-8px); border-color: var(--text-primary); }
-.card-img { width: 100%; height: 250px; object-fit: cover; filter: grayscale(100%) contrast(1.2); transition: filter 0.3s ease; border-bottom: 1px solid var(--border); }
-.carousel-card:hover .card-img { filter: grayscale(0%) contrast(1.1); }
-.card-content { padding: 32px; display: flex; flex-direction: column; flex-grow: 1; justify-content: space-between; }
-.card-title { font-family: var(--font-heading); font-size: 2rem; font-weight: 800; text-transform: uppercase; margin-bottom: 12px; color: var(--text-primary); transition: color 0.3s ease; }
-.carousel-card:hover .card-title { color: var(--text-primary); }
-.card-desc { font-family: var(--font-body); font-size: 1.1rem; color: var(--text-secondary); line-height: 1.5; }
-.card-bot { font-family: var(--font-heading); font-weight: 800; font-size: 1.1rem; margin-top: 32px; display: flex; justify-content: space-between; color: var(--text-secondary); transition: color 0.3s ease; text-transform: uppercase; letter-spacing: 0.1em; }
-.carousel-card:hover .card-bot { color: var(--text-primary); }
-
-.btn-brutal { display: inline-block; background-color: transparent; color: var(--text-primary); border: 2px solid var(--text-primary); padding: 16px 48px; font-family: var(--font-heading); font-size: 1.25rem; font-weight: 800; text-transform: uppercase; text-decoration: none; cursor: pointer; transition: all 0.2s ease; position: relative; z-index: 10; }
-.btn-brutal:hover { background-color: var(--text-primary); color: var(--bg-primary); }
-
-/* App Shell Overlay */
-#app-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(5,5,5,0.95); backdrop-filter: blur(20px); z-index: 9999; display: none; flex-direction: column; opacity: 0; transition: opacity 0.3s ease; }
-#app-overlay.active { display: flex; opacity: 1; }
-.overlay-header { height: 60px; display: flex; justify-content: space-between; align-items: center; padding: 0 24px; border-bottom: 1px solid var(--border); background: var(--bg-primary); }
-.overlay-title { font-family: var(--font-heading); font-weight: 800; letter-spacing: 0.05em; font-size: 1rem; color: var(--text-primary); }
-.close-btn { color: var(--text-primary); background: transparent; border: 1px solid var(--border); font-family: var(--font-heading); font-weight: 800; padding: 8px 24px; cursor: pointer; transition: all 0.2s ease; }
-.close-btn:hover { background: var(--text-primary); color: var(--bg-primary); }
-#app-iframe { flex-grow: 1; width: 100%; border: none; background: #fff; }
-`, "global-css")
+// OS Core Wrapper
+const os_core = dom.create("div", { id: "os-core" })
 
 // Navigation
-const nav = dom.create("nav", { styles: { padding: "32px 24px", borderBottom: "1px solid var(--border)", display: "flex", justifyContent: "space-between", alignItems: "center", position: "relative", zIndex: "100" } })
-const logo = dom.create("div", { text: "INVARIANT.", styles: { fontFamily: "var(--font-heading)", fontWeight: "900", fontSize: "1.5rem", letterSpacing: "-0.05em" } })
-const nav_link = dom.create("a", { text: "THE STANDARD →", attrs: { href: "#ecosystem" }, styles: { color: "var(--text-primary)", textDecoration: "none", fontFamily: "var(--font-body)", fontWeight: "600" } })
+const nav = dom.create("nav", { className: "reveal", styles: { padding: "32px 48px", borderBottom: "1px solid var(--border)", display: "flex", justifyContent: "space-between", alignItems: "center", position: "absolute", top: "0", width: "100%", zIndex: "100" } })
+const logo = dom.create("div", { text: "INVARIANT", styles: { fontFamily: "var(--font-heading)", fontWeight: "900", fontSize: "1.5rem", letterSpacing: "0.1em" } })
+const nav_link = dom.create("a", { text: "OS CORE →", attrs: { href: "#ecosystem" }, styles: { color: "var(--text-secondary)", textDecoration: "none", fontFamily: "var(--font-body)", fontWeight: "600", transition: "color 0.3s ease" } })
 dom.add_child(nav, logo)
 dom.add_child(nav, nav_link)
-dom.mount(nav)
+dom.add_child(os_core, nav)
 
 // Hero Section (Ken Burns)
 const hero_sec = dom.create("section", { className: "hero-sec" })
@@ -181,7 +121,7 @@ dom.add_child(hero_sec, hbg2)
 dom.add_child(hero_sec, hbg3)
 dom.add_child(hero_sec, hoverlay)
 
-const hero_container = dom.create("div", { className: "container" })
+const hero_container = dom.create("div", { className: "container reveal" })
 const hero_h1_1 = dom.create("h1", { className: "title-monolith", text: "THE ERA OF SPECULATION IS DEAD." })
 const hero_h1_2 = dom.create("h1", { className: "title-monolith", text: "MATHEMATICS IS THE NEW STANDARD.", styles: { color: "var(--text-secondary)" } })
 const hero_btn_wrap = dom.create("div", { styles: { marginTop: "64px", display: "flex", gap: "24px", flexWrap: "wrap", position: "relative", zIndex: "10" } })
@@ -193,29 +133,30 @@ dom.add_child(hero_container, hero_h1_1)
 dom.add_child(hero_container, hero_h1_2)
 dom.add_child(hero_container, hero_btn_wrap)
 dom.add_child(hero_sec, hero_container)
-dom.mount(hero_sec)
+dom.add_child(os_core, hero_sec)
 
 // Manifesto Section
 const man_sec = dom.create("section", { id: "manifesto", className: "section section-light" })
-const man_container = dom.create("div", { className: "container" })
+const man_container = dom.create("div", { className: "container reveal" })
 const man_h2 = dom.create("h2", { className: "title-monolith", text: "WE REPLACE THE CASINO WITH DETERMINISM.", styles: { fontSize: "clamp(2rem, 5vw, 4rem)" } })
-const man_p = dom.create("p", { className: "text-stark", text: "The current digital and financial architectures are built on a foundation of sand—narrative, emotion, and manipulation. Invariant is the architectural foundation of the future. We do not gamble. We do not speculate. We execute mathematical truth. If you are relying on narrative, you are already obsolete.", styles: { color: "var(--bg-secondary)", marginTop: "32px", fontSize: "1.25rem", maxWidth: "900px" } })
+const man_p = dom.create("p", { className: "text-stark", text: "The current digital and financial architectures are built on a foundation of sand—narrative, emotion, and manipulation. Invariant is the architectural foundation of the future. We do not gamble. We do not speculate. We execute mathematical truth. If you are relying on narrative, you are already obsolete.", styles: { color: "var(--bg-secondary)", marginTop: "40px", fontSize: "1.25rem", maxWidth: "900px" } })
 dom.add_child(man_container, man_h2)
 dom.add_child(man_container, man_p)
 dom.add_child(man_sec, man_container)
-dom.mount(man_sec)
+dom.add_child(os_core, man_sec)
 
 // Ecosystem Section (Carousel)
-const eco_sec = dom.create("section", { id: "ecosystem", className: "section section-dark" })
-const eco_container = dom.create("div", { className: "container" })
-const eco_h2 = dom.create("h2", { text: "THE VANGUARD", styles: { fontSize: "2rem", color: "var(--text-secondary)" } })
-const eco_h3 = dom.create("h3", { className: "title-monolith", text: "THE DETERMINISTIC ECOSYSTEM", styles: { fontSize: "clamp(2rem, 4vw, 4rem)" } })
-const eco_track = dom.create("div", { className: "carousel-track" })
+const eco_sec = dom.create("section", { id: "ecosystem", className: "section section-dark", styles: { paddingBottom: "180px" } })
+const eco_container = dom.create("div", { className: "container reveal" })
+const eco_h2 = dom.create("h2", { text: "THE VANGUARD", styles: { fontSize: "1.5rem", color: "var(--text-secondary)", letterSpacing: "0.2em" } })
+const eco_h3 = dom.create("h3", { className: "title-monolith", text: "THE DETERMINISTIC ECOSYSTEM", styles: { fontSize: "clamp(2rem, 4vw, 4.5rem)" } })
+const eco_track = dom.create("div", { className: "carousel-track reveal" })
 
-const eco_items = [{"title":"Meridian","desc":"Trustless Identity & State. The foundational layer for an uncorrupted digital society.","link":"/meridian/index.html","img":"/assets/meridian_card.png"},{"title":"Hydrocore","desc":"Autonomous Resource Management. Algorithmic allocation without human bottleneck.","link":"/hydrocore/index.html","img":"/assets/hydrocore_card.png"},{"title":"Lume-V","desc":"The Deterministic Ecosystem Standard. Replacing subjective infrastructure with verifiable truth.","link":"/lume-v/index.html","img":"/assets/lumev_card.png"},{"title":"Axiom Core","desc":"Financial Determinism & Market Truth. The engine that strips emotion from the tape.","link":"https://dwtl.io","img":"/assets/axiom_card.png"},{"title":"Axiom News","desc":"The Deterministic News Layer. Absolute signal extraction without narrative bias.","link":"http://localhost:3000","img":"/assets/axiom_card.png"},{"title":"Truth Engine","desc":"Core epistemological validation matrix. Verifying the unalterable state of execution.","link":"http://localhost:3001","img":"/assets/meridian_card.png"},{"title":"Trust Layer","desc":"The cryptographically isolated trust fabric for multi-division enterprise assurance.","link":"http://localhost:3002","img":"/assets/lumev_card.png"},{"title":"Lume42","desc":"Advanced R&D and AI Agents. Expanding the frontier of deterministic automation.","link":"http://localhost:3003","img":"/assets/lume42_card.png"}]
+const eco_items = [{"title":"Meridian","desc":"Trustless Identity & State. The foundational layer for an uncorrupted digital society.","link":"/meridian/index.html","img":"/assets/meridian_card.png"},{"title":"Hydrocore","desc":"Autonomous Resource Management. Algorithmic allocation without human bottleneck.","link":"/hydrocore/index.html","img":"/assets/hydrocore_card.png"},{"title":"Verdara Ultra","desc":"Deterministic outdoor flow engine. Ultra-distance navigation, hazard routing, and environmental state governance.","link":"/verdara/index.html","img":"/assets/verdara_card.png"},{"title":"Lume-V","desc":"The Deterministic Ecosystem Standard. Replacing subjective infrastructure with verifiable truth.","link":"/lume-v/index.html","img":"/assets/lumev_card.png"},{"title":"BioCore","desc":"Biological Flow Engine. Metabolic, circulatory, neurological, and stress flow governance.","link":"/biocore/index.html","img":"/assets/biocore_card.png"},{"title":"NeuroCore","desc":"Cognitive Flow Engine. Neural-synaptic geometric bandwidth and attention routing.","link":"/neurocore/index.html","img":"/assets/neurocore_card.png"},{"title":"SocioCore","desc":"Relational Flow Engine. Trust graphs, conflict friction maps, and human alignment ledgers.","link":"/sociocore/index.html","img":"/assets/sociocore_card.png"},{"title":"GovernanceCore","desc":"Decision Flow Engine. Operational authority, priority flow, and macro-structural integrity.","link":"/governancecore/index.html","img":"/assets/governancecore_card.png"},{"title":"Axiom Core","desc":"Financial Determinism & Market Truth. The engine that strips emotion from the tape.","link":"https://dwtl.io","img":"/assets/axiom_card.png"},{"title":"Axiom News","desc":"The Deterministic News Layer. Absolute signal extraction without narrative bias.","link":"http://localhost:3000","img":"/assets/axiom_card.png"},{"title":"Truth Engine","desc":"Core epistemological validation matrix. Verifying the unalterable state of execution.","link":"http://localhost:3001","img":"/assets/meridian_card.png"},{"title":"Trust Layer","desc":"The cryptographically isolated trust fabric for multi-division enterprise assurance.","link":"http://localhost:3002","img":"/assets/lumev_card.png"},{"title":"Lume-Cortex","desc":"Advanced R&D and AI Agents. Expanding the frontier of deterministic automation.","link":"/lume-cortex/index.html","img":"/assets/lume42_card.png"},{"title":"Enterprise Daemons","desc":"Deterministic B2B background execution nodes. Continuous algorithmic enforcement and workflow routing.","link":"#","img":"/assets/daemon_card.png"}]
 
 for (const item of eco_items) {
     const card = dom.create("a", { className: "carousel-card", attrs: { onclick: "openApp('" + item.link + "', '" + item.title + "'); return false;", href: "#" } })
+    const c_inner = dom.create("div", { className: "card-inner" })
     const img = dom.create("img", { className: "card-img", attrs: { src: item.img } })
     const c_content = dom.create("div", { className: "card-content" })
     const c_top = dom.create("div", {})
@@ -224,50 +165,57 @@ for (const item of eco_items) {
     dom.add_child(c_top, c_title)
     dom.add_child(c_top, c_desc)
     const c_bot = dom.create("div", { className: "card-bot" })
-    const bot_span1 = dom.create("span", { text: "INITIATE" })
+    const bot_span1 = dom.create("span", { text: "INITIATE OS" })
     const bot_span2 = dom.create("span", { text: "→" })
     dom.add_child(c_bot, bot_span1)
     dom.add_child(c_bot, bot_span2)
     dom.add_child(c_content, c_top)
     dom.add_child(c_content, c_bot)
-    dom.add_child(card, img)
-    dom.add_child(card, c_content)
+    dom.add_child(c_inner, img)
+    dom.add_child(c_inner, c_content)
+    dom.add_child(card, c_inner)
     dom.add_child(eco_track, card)
 }
 dom.add_child(eco_container, eco_h2)
 dom.add_child(eco_container, eco_h3)
 dom.add_child(eco_container, eco_track)
 dom.add_child(eco_sec, eco_container)
-dom.mount(eco_sec)
+dom.add_child(os_core, eco_sec)
+
+// Footer
+const footer = dom.create("footer", { className: "section section-dark reveal", styles: { borderTop: "1px solid var(--border)", padding: "64px 0", minHeight: "auto" } })
+const footer_container = dom.create("div", { className: "container", styles: { display: "flex", justifyContent: "space-between", alignItems: "center" } })
+const footer_logo = dom.create("div", { text: "INVARIANT.", styles: { fontFamily: "var(--font-heading)", fontWeight: "900", fontSize: "2rem", letterSpacing: "0.1em", color: "var(--text-secondary)" } })
+const footer_copy = dom.create("div", { text: "© 2026 The Determinism Standard. All Rights Reserved.", styles: { fontFamily: "var(--font-body)", color: "rgba(255,255,255,0.2)" } })
+dom.add_child(footer_container, footer_logo)
+dom.add_child(footer_container, footer_copy)
+dom.add_child(footer, footer_container)
+dom.add_child(os_core, footer)
+
+// Mount OS Core
+dom.mount(os_core)
 
 // App Shell Overlay Elements
 const overlay = dom.create("div", { id: "app-overlay" })
 const o_header = dom.create("div", { className: "overlay-header" })
-const o_title = dom.create("div", { id: "overlay-title", className: "overlay-title", text: "INVARIANT SHELL" })
-const o_close = dom.create("button", { className: "close-btn", text: "RETURN TO INVARIANT", attrs: { onclick: "closeApp()" } })
+const o_title_wrap = dom.create("div", { className: "overlay-title" })
+const o_dot = dom.create("div", { className: "status-dot" })
+const o_title_text = dom.create("span", { id: "overlay-title", text: "INVARIANT SHELL" })
+dom.add_child(o_title_wrap, o_dot)
+dom.add_child(o_title_wrap, o_title_text)
+
+const o_close = dom.create("button", { className: "close-btn", text: "TERMINATE", attrs: { onclick: "closeApp()" } })
 const iframe = dom.create("iframe", { id: "app-iframe", attrs: { src: "about:blank" } })
 
-dom.add_child(o_header, o_title)
+dom.add_child(o_header, o_title_wrap)
 dom.add_child(o_header, o_close)
 dom.add_child(overlay, o_header)
 dom.add_child(overlay, iframe)
 dom.mount(overlay)
 
-// App Shell JS Logic
-const script = dom.create("script", { text: "function openApp(url, title) { document.getElementById('app-iframe').src = url; document.getElementById('overlay-title').innerText = title + ' // ACTIVE'; document.getElementById('app-overlay').classList.add('active'); document.body.style.overflow = 'hidden'; } function closeApp() { document.getElementById('app-overlay').classList.remove('active'); setTimeout(() => { document.getElementById('app-iframe').src = 'about:blank'; }, 300); document.body.style.overflow = 'auto'; }" })
-dom.mount(script)
 
-// Footer
-const footer = dom.create("footer", { className: "section section-dark", styles: { borderTop: "1px solid var(--border)", padding: "64px 0" } })
-const footer_container = dom.create("div", { className: "container", styles: { display: "flex", justifyContent: "space-between", alignItems: "center" } })
-const footer_logo = dom.create("div", { text: "INVARIANT.", styles: { fontFamily: "var(--font-heading)", fontWeight: "900", fontSize: "2rem", letterSpacing: "-0.05em", color: "var(--text-secondary)" } })
-const footer_copy = dom.create("div", { text: "© 2026 The Determinism Standard. All Rights Reserved.", styles: { fontFamily: "var(--font-body)", color: "var(--text-secondary)" } })
-dom.add_child(footer_container, footer_logo)
-dom.add_child(footer_container, footer_copy)
-dom.add_child(footer, footer_container)
-dom.mount(footer)
 
-console.log("Invariant App Shell (Lume Architecture) Booted.")
+console.log("Apex UI Module Loaded.")
 
 
 // ═══ Lume Health Beacon ═══

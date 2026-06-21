@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SocioCore | Telemetry Engine</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&family=Space+Mono:wght@400;700&display=swap');
+
+    :root {
+      --bg: #020202;
+      --panel: #0a0a0c;
+      --border: rgba(255,255,255,0.1);
+      --text: #ffffff;
+      --text-muted: #666;
+      --optimal: #38bdf8;
+      --caution: #f59e0b;
+      --critical: #ef4444;
+      --font-ui: 'Outfit', sans-serif;
+      --font-mono: 'Space Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--text); font-family: var(--font-ui); padding: 32px; overflow-x: hidden; }
+
+    .header { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 1px solid var(--border); padding-bottom: 16px; margin-bottom: 32px; }
+    .title { font-size: 2rem; font-weight: 900; letter-spacing: 0.1em; text-transform: uppercase; }
+    .subtitle { font-size: 1rem; color: var(--text-muted); }
+    .live-indicator { display: flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 0.8rem; color: var(--optimal); }
+    .dot { width: 8px; height: 8px; background: var(--optimal); border-radius: 50%; animation: pulse 1s infinite; box-shadow: 0 0 10px var(--optimal); }
+
+    @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+    
+    .node-card { background: var(--panel); border: 1px solid var(--border); padding: 20px; border-radius: 4px; display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden; }
+    .node-card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--optimal); transition: background 0.3s; }
+    .node-card.caution::before { background: var(--caution); }
+    .node-card.critical::before { background: var(--critical); }
+
+    .node-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }
+    .node-id { font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-muted); }
+    .node-name { font-size: 1.1rem; font-weight: 600; margin-top: 4px; }
+    
+    .node-data { display: flex; justify-content: space-between; align-items: flex-end; font-family: var(--font-mono); }
+    .node-value { font-size: 2.5rem; font-weight: 700; line-height: 1; transition: color 0.3s; }
+    .node-metric { font-size: 0.9rem; color: var(--text-muted); padding-bottom: 4px; }
+
+    .chart { height: 40px; width: 100%; margin-top: 16px; display: flex; align-items: flex-end; gap: 2px; }
+    .bar { flex: 1; background: var(--border); transition: height 0.2s ease, background 0.3s ease; }
+    .bar.active { background: var(--optimal); }
+    .node-card.caution .bar.active { background: var(--caution); }
+    .node-card.critical .bar.active { background: var(--critical); }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div>
+      <div class="title" id="primitive-title">LOADING...</div>
+      <div class="subtitle" id="primitive-desc">Initializing Telemetry Stream</div>
+    </div>
+    <div class="live-indicator">
+      <div class="dot"></div> LIVE DATALINK
+    </div>
+  </div>
+
+  <div class="grid" id="node-grid"></div>
+
+  <script>
+    const engineData = {
+      primitives: [
+        { name: "Energy", desc: "Social Energy Flow / Battery Dynamics", nodes: [
+          { id: "S1", name: "Social Battery Level" }, { id: "S2", name: "Interaction Demand" }, { id: "S3", name: "Social Recovery Rate" }, { id: "S4", name: "Engagement Quality" }, { id: "S5", name: "Boundary Integrity" }, { id: "S6", name: "Social Overload" }, { id: "S7", name: "Reciprocity Balance" }, { id: "S8", name: "Social Burnout Risk" }, { id: "S9", name: "Belonging Level" }, { id: "S10", name: "Social Resilience" }
+        ]},
+        { name: "Identity", desc: "Identity Coherence / Masking Load", nodes: [
+          { id: "I1", name: "Self-Concept Clarity" }, { id: "I2", name: "Values Alignment" }, { id: "I3", name: "Masking Load" }, { id: "I4", name: "Identity Drift" }, { id: "I5", name: "Purpose Strength" }, { id: "I6", name: "Boundary Strength" }, { id: "I7", name: "Shame Load" }, { id: "I8", name: "Comparison Intensity" }, { id: "I9", name: "Narrative Coherence" }, { id: "I10", name: "Identity Safety Index" }
+        ]},
+        { name: "Relational", desc: "Relational Stability / Trust and Conflict", nodes: [
+          { id: "R1", name: "Trust Level" }, { id: "R2", name: "Relational Conflict Load" }, { id: "R3", name: "Primary Relationship Health" }, { id: "R4", name: "Friendship Network Quality" }, { id: "R5", name: "Repair Capacity" }, { id: "R6", name: "Attachment Security" }, { id: "R7", name: "Support Availability" }, { id: "R8", name: "Loneliness Load" }, { id: "R9", name: "Relational Satisfaction" }, { id: "R10", name: "Boundary Respect" }, { id: "R11", name: "Relational Safety Index" }
+        ]},
+        { name: "Communication", desc: "Communication Load / Expressive Clarity", nodes: [
+          { id: "C1", name: "Expressive Clarity" }, { id: "C2", name: "Emotional Labor Load" }, { id: "C3", name: "Misunderstanding Rate" }, { id: "C4", name: "Communication Quality" }, { id: "C5", name: "Digital Overload" }, { id: "C6", name: "Conflict Communication" }, { id: "C7", name: "Emotional Expression" }, { id: "C8", name: "Assertiveness Level" }, { id: "C9", name: "Communication Avoidance" }, { id: "C10", name: "Receptive Capacity" }, { id: "C11", name: "Global Social Resilience" }
+        ]}
+      ]
+    };
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const primitiveKey = urlParams.get('primitive') || 'Energy';
+    const primitive = engineData.primitives.find(p => p.name === primitiveKey);
+
+    document.getElementById('primitive-title').innerText = primitive.name.toUpperCase() + " FLOW";
+    document.getElementById('primitive-desc').innerText = primitive.desc;
+
+    const grid = document.getElementById('node-grid');
+    const nodesState = {};
+
+    primitive.nodes.forEach(node => {
+      nodesState[node.id] = { val: 90 + Math.random() * 8, history: Array(20).fill(50) };
+      const el = document.createElement('div');
+      el.className = 'node-card';
+      el.id = 'card-' + node.id;
+      let bars = '';
+      for(let i=0; i<20; i++) bars += `<div class="bar" id="bar-${node.id}-${i}"></div>`;
+      el.innerHTML = `
+        <div class="node-header"><div><div class="node-id">${node.id}</div><div class="node-name">${node.name}</div></div></div>
+        <div class="node-data"><div class="node-value" id="val-${node.id}">--</div><div class="node-metric">% CAP</div></div>
+        <div class="chart">${bars}</div>
+      `;
+      grid.appendChild(el);
+    });
+
+    setInterval(() => {
+      primitive.nodes.forEach(node => {
+        const state = nodesState[node.id];
+        state.val = Math.max(10, Math.min(100, state.val + (Math.random() - 0.45) * 4));
+        state.history.shift(); state.history.push(state.val);
+        const valEl = document.getElementById('val-' + node.id);
+        const cardEl = document.getElementById('card-' + node.id);
+        valEl.innerText = state.val.toFixed(1);
+        cardEl.className = 'node-card';
+        if (state.val < 40) { cardEl.classList.add('critical'); valEl.style.color = 'var(--critical)'; }
+        else if (state.val < 70) { cardEl.classList.add('caution'); valEl.style.color = 'var(--caution)'; }
+        else { valEl.style.color = 'var(--optimal)'; }
+        for(let i=0; i<20; i++) document.getElementById(`bar-${node.id}-${i}`).style.height = state.history[i] + '%';
+      });
+    }, 1000);
+  </script>
+</body>
+</html>

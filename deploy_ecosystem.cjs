@@ -57,4 +57,20 @@ hydrocoreAssets.forEach(asset => {
     }
 });
 
+// 5. Merge Lume-Cortex (Static Vite Build)
+console.log("   [+] Ingesting Lume-Cortex...");
+copyDir('D:\\lume-cortex\\dist', path.join(INVARIANT_DIST, 'lume-cortex'));
+
+// 6. Merge Verdara Ultra
+console.log("   [+] Ingesting Verdara Ultra...");
+copyDir('D:\\verdara-ultra\\dist', path.join(INVARIANT_DIST, 'verdara'));
+
+// 7. Merge Human OS Nodes
+console.log("   [+] Ingesting Human OS Nodes (BioCore, NeuroCore, SocioCore, GovernanceCore)...");
+copyDir('D:\\biocore\\dist', path.join(INVARIANT_DIST, 'biocore'));
+copyDir('D:\\neurocore\\dist', path.join(INVARIANT_DIST, 'neurocore'));
+copyDir('D:\\sociocore\\dist', path.join(INVARIANT_DIST, 'sociocore'));
+copyDir('D:\\governancecore\\dist', path.join(INVARIANT_DIST, 'governancecore'));
+
 console.log("\n✦ Ecosystem Merge Complete. All sub-systems physically unified in D:\\invariant\\dist\\");
+

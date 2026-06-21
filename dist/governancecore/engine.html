@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>GovernanceCore | Telemetry Engine</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&family=Space+Mono:wght@400;700&display=swap');
+
+    :root {
+      --bg: #020202;
+      --panel: #0a0a0c;
+      --border: rgba(255,255,255,0.1);
+      --text: #ffffff;
+      --text-muted: #666;
+      --optimal: #38bdf8;
+      --caution: #f59e0b;
+      --critical: #ef4444;
+      --font-ui: 'Outfit', sans-serif;
+      --font-mono: 'Space Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--text); font-family: var(--font-ui); padding: 32px; overflow-x: hidden; }
+
+    .header { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 1px solid var(--border); padding-bottom: 16px; margin-bottom: 32px; }
+    .title { font-size: 2rem; font-weight: 900; letter-spacing: 0.1em; text-transform: uppercase; }
+    .subtitle { font-size: 1rem; color: var(--text-muted); }
+    .live-indicator { display: flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 0.8rem; color: var(--optimal); }
+    .dot { width: 8px; height: 8px; background: var(--optimal); border-radius: 50%; animation: pulse 1s infinite; box-shadow: 0 0 10px var(--optimal); }
+
+    @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+    
+    .node-card { background: var(--panel); border: 1px solid var(--border); padding: 20px; border-radius: 4px; display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden; }
+    .node-card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--optimal); transition: background 0.3s; }
+    .node-card.caution::before { background: var(--caution); }
+    .node-card.critical::before { background: var(--critical); }
+
+    .node-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }
+    .node-id { font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-muted); }
+    .node-name { font-size: 1.1rem; font-weight: 600; margin-top: 4px; }
+    
+    .node-data { display: flex; justify-content: space-between; align-items: flex-end; font-family: var(--font-mono); }
+    .node-value { font-size: 2.5rem; font-weight: 700; line-height: 1; transition: color 0.3s; }
+    .node-metric { font-size: 0.9rem; color: var(--text-muted); padding-bottom: 4px; }
+
+    .chart { height: 40px; width: 100%; margin-top: 16px; display: flex; align-items: flex-end; gap: 2px; }
+    .bar { flex: 1; background: var(--border); transition: height 0.2s ease, background 0.3s ease; }
+    .bar.active { background: var(--optimal); }
+    .node-card.caution .bar.active { background: var(--caution); }
+    .node-card.critical .bar.active { background: var(--critical); }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div>
+      <div class="title" id="primitive-title">LOADING...</div>
+      <div class="subtitle" id="primitive-desc">Initializing Telemetry Stream</div>
+    </div>
+    <div class="live-indicator">
+      <div class="dot"></div> LIVE DATALINK
+    </div>
+  </div>
+
+  <div class="grid" id="node-grid"></div>
+
+  <script>
+    const engineData = {
+      primitives: [
+        { name: "Rules", desc: "Rule Coherence Flow / Structural Integrity", nodes: [
+          { id: "RC1", name: "Rule Clarity" }, { id: "RC2", name: "Rule Enforcement" }, { id: "RC3", name: "Compliance Level" }, { id: "RC4", name: "Regulatory Stability" }, { id: "RC5", name: "Exception Rate" }, { id: "RC6", name: "Rule Drift Risk" }, { id: "RC7", name: "Transparency Level" }, { id: "RC8", name: "Rule Conflict" }, { id: "RC9", name: "Rule Complexity" }, { id: "RC10", name: "Rule Safety Index" }
+        ]},
+        { name: "Coordination", desc: "Coordination Flow / Agent Alignment", nodes: [
+          { id: "CO1", name: "Agent Alignment" }, { id: "CO2", name: "Resource Allocation" }, { id: "CO3", name: "Scheduling Coherence" }, { id: "CO4", name: "Information Flow" }, { id: "CO5", name: "Coordination Drift" }, { id: "CO6", name: "Coordination Overhead" }, { id: "CO7", name: "Redundancy Level" }, { id: "CO8", name: "Bottleneck Severity" }, { id: "CO9", name: "Scalability" }, { id: "CO10", name: "Coordination Safety Index" }
+        ]},
+        { name: "Fairness", desc: "Fairness Flow / Equity and Inclusion", nodes: [
+          { id: "F1", name: "Distributive Equity" }, { id: "F2", name: "Bias Pressure" }, { id: "F3", name: "Access Equality" }, { id: "F4", name: "Representation Balance" }, { id: "F5", name: "Grievance Accessibility" }, { id: "F6", name: "Outcome Transparency" }, { id: "F7", name: "Vulnerability Protection" }, { id: "F8", name: "Exploitation Risk" }, { id: "F9", name: "Inclusion Level" }, { id: "F10", name: "Power Balance" }, { id: "F11", name: "Fairness Safety Index" }
+        ]},
+        { name: "Conflict", desc: "Conflict Resolution / Escalation Control", nodes: [
+          { id: "CR1", name: "Active Disputes" }, { id: "CR2", name: "Escalation Pressure" }, { id: "CR3", name: "Resolution Rate" }, { id: "CR4", name: "Mediation Effectiveness" }, { id: "CR5", name: "Deadlock Risk" }, { id: "CR6", name: "Retaliation Pressure" }, { id: "CR7", name: "Stakeholder Satisfaction" }, { id: "CR8", name: "Systemic Conflict" }, { id: "CR9", name: "Prevention Effectiveness" }, { id: "CR10", name: "Recurrence Rate" }, { id: "CR11", name: "Global Governance Resilience" }
+        ]}
+      ]
+    };
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const primitiveKey = urlParams.get('primitive') || 'Rules';
+    const primitive = engineData.primitives.find(p => p.name === primitiveKey);
+
+    document.getElementById('primitive-title').innerText = primitive.name.toUpperCase() + " FLOW";
+    document.getElementById('primitive-desc').innerText = primitive.desc;
+
+    const grid = document.getElementById('node-grid');
+    const nodesState = {};
+
+    primitive.nodes.forEach(node => {
+      nodesState[node.id] = { val: 90 + Math.random() * 8, history: Array(20).fill(50) };
+      const el = document.createElement('div');
+      el.className = 'node-card';
+      el.id = 'card-' + node.id;
+      let bars = '';
+      for(let i=0; i<20; i++) bars += `<div class="bar" id="bar-${node.id}-${i}"></div>`;
+      el.innerHTML = `
+        <div class="node-header"><div><div class="node-id">${node.id}</div><div class="node-name">${node.name}</div></div></div>
+        <div class="node-data"><div class="node-value" id="val-${node.id}">--</div><div class="node-metric">% CAP</div></div>
+        <div class="chart">${bars}</div>
+      `;
+      grid.appendChild(el);
+    });
+
+    setInterval(() => {
+      primitive.nodes.forEach(node => {
+        const state = nodesState[node.id];
+        state.val = Math.max(10, Math.min(100, state.val + (Math.random() - 0.45) * 4));
+        state.history.shift(); state.history.push(state.val);
+        const valEl = document.getElementById('val-' + node.id);
+        const cardEl = document.getElementById('card-' + node.id);
+        valEl.innerText = state.val.toFixed(1);
+        cardEl.className = 'node-card';
+        if (state.val < 40) { cardEl.classList.add('critical'); valEl.style.color = 'var(--critical)'; }
+        else if (state.val < 70) { cardEl.classList.add('caution'); valEl.style.color = 'var(--caution)'; }
+        else { valEl.style.color = 'var(--optimal)'; }
+        for(let i=0; i<20; i++) document.getElementById(`bar-${node.id}-${i}`).style.height = state.history[i] + '%';
+      });
+    }, 1000);
+  </script>
+</body>
+</html>

@@ -542,6 +542,21 @@ if (validationErrors.length > 0) {
     console.log(`  ✓ Build time: ${buildRecord.buildTimeMs}ms (avg: ${avgTime}ms)`)
     console.log(`  ✓ History: ${history.length} builds, ${failRate}% failure rate`)
     console.log('  ✦ All 3 validation stages passed')
+    
+    // Copy index.html and assets to dist for Render deployment
+    console.log('  ⟐ Packaging dist/ for deployment...')
+    const indexHtml = readFileSync(resolve(__dirname, 'index.html'), 'utf-8')
+    // Rewrite path for dist root
+    const distIndex = indexHtml.replace('/dist/dwsc.js', '/dwsc.js')
+    writeFileSync(resolve(__dirname, 'dist/index.html'), distIndex, 'utf-8')
+    
+    try {
+        execSync(`xcopy /E /I /Y "${resolve(__dirname, 'assets')}" "${resolve(__dirname, 'dist/assets')}"`, { stdio: 'ignore' })
+    } catch(e) {
+        // Fallback for non-windows or if xcopy fails
+        console.log('  [Warning] asset copy skipped or failed')
+    }
+    
     console.log('  ✦ Safe to deploy ✦\n')
 }
 
