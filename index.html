@@ -58,8 +58,11 @@
     }
 
     /* Apex Carousel */
-    .carousel-track { display: flex; gap: 24px; overflow-x: auto; padding: 40px 0; scroll-snap-type: x mandatory; scrollbar-width: none; -ms-overflow-style: none; margin: 0; width: 100%; perspective: 1000px; }
-    .carousel-track::-webkit-scrollbar { display: none; }
+    .carousel-track { display: flex; gap: 24px; overflow-x: auto; padding: 40px 0 60px 0; scroll-snap-type: x mandatory; margin: 0; width: 100%; perspective: 1000px; }
+    .carousel-track::-webkit-scrollbar { height: 12px; }
+    .carousel-track::-webkit-scrollbar-track { background: var(--bg-primary); border: 1px solid var(--border); border-radius: 0; }
+    .carousel-track::-webkit-scrollbar-thumb { background: var(--text-secondary); border-radius: 0; }
+    .carousel-track::-webkit-scrollbar-thumb:hover { background: var(--text-primary); }
 
     .carousel-card { flex: 0 0 min(85vw, 400px); scroll-snap-align: center; background-color: var(--bg-secondary); border: 1px solid var(--border); border-radius: 4px; transition: transform 0.1s ease-out, box-shadow 0.1s ease-out; cursor: pointer; display: flex; flex-direction: column; text-decoration: none; position: relative; overflow: hidden; transform-style: preserve-3d; will-change: transform; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
     .card-inner { pointer-events: none; display: flex; flex-direction: column; height: 100%; transform: translateZ(30px); }
