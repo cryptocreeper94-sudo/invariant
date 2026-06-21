@@ -121,7 +121,7 @@ dom.add_child(hero_sec, hbg2)
 dom.add_child(hero_sec, hbg3)
 dom.add_child(hero_sec, hoverlay)
 
-const hero_container = dom.create("div", { className: "container reveal" })
+const hero_container = dom.create("div", { className: "container reveal", styles: { display: "flex", flexDirection: "column", justifyContent: "center" } })
 const hero_h1_1 = dom.create("h1", { className: "title-monolith", text: "THE ERA OF SPECULATION IS DEAD." })
 const hero_h1_2 = dom.create("h1", { className: "title-monolith", text: "MATHEMATICS IS THE NEW STANDARD.", styles: { color: "var(--text-secondary)" } })
 const hero_btn_wrap = dom.create("div", { styles: { marginTop: "64px", display: "flex", gap: "24px", flexWrap: "wrap", position: "relative", zIndex: "10" } })

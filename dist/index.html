@@ -29,10 +29,10 @@
 
     h1, h2, h3, h4 { font-family: var(--font-heading); text-transform: uppercase; letter-spacing: -0.03em; font-weight: 900; line-height: 1.1; margin-bottom: 0.5em; }
 
-    .title-monolith { font-size: clamp(3rem, 8vw, 8rem); color: var(--text-primary); max-width: 1200px; margin: 0 auto; position: relative; z-index: 10; text-shadow: 0 4px 24px rgba(0,0,0,0.5); }
+    .title-monolith { font-size: clamp(2rem, 6vw, 6rem); line-height: 0.95; color: var(--text-primary); max-width: 1200px; margin: 0 auto; position: relative; z-index: 10; text-shadow: 0 4px 24px rgba(0,0,0,0.5); }
     .text-stark { font-family: var(--font-body); font-size: clamp(1.2rem, 2vw, 1.5rem); color: var(--text-secondary); font-weight: 400; max-width: 800px; }
     .container { width: 100%; max-width: 1400px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 10; }
-    .section { padding: 120px 0; border-bottom: 1px solid var(--border); position: relative; overflow: hidden; }
+    .section { padding: 160px 0; border-bottom: 1px solid var(--border); position: relative; overflow: hidden; }
     .section-dark { background-color: var(--bg-primary); }
     .section-light { background-color: var(--text-primary); color: var(--bg-primary); }
     .section-light h2 { color: var(--bg-primary); }
@@ -42,7 +42,7 @@
     .reveal.active { opacity: 1; transform: translateY(0); }
 
     /* Ken Burns Hero */
-    .hero-sec { min-height: 100vh; display: flex; align-items: center; position: relative; overflow: hidden; }
+    .hero-sec { min-height: 100vh; display: flex; align-items: center; padding-top: 120px; position: relative; overflow: hidden; }
     .hero-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; background-size: cover; background-position: center; opacity: 0; animation: kenburns 24s infinite; }
     .hero-bg:nth-child(1) { background-image: url('/assets/hero_bg_1.png'); animation-delay: 0s; }
     .hero-bg:nth-child(2) { background-image: url('/assets/hero_bg_2.png'); animation-delay: 8s; }
