@@ -3,6 +3,14 @@ const path = require('path');
 const { execSync } = require('child_process');
 
 const INVARIANT_DIST = path.join(__dirname, 'dist');
+const LUME_V_SRC    = process.env.LUME_V_SRC    || path.join(__dirname, '..', 'lume-v-site', 'dist');
+const MERIDIAN_SRC  = process.env.MERIDIAN_SRC  || path.join(__dirname, '..', 'meridian-ui', 'dist');
+const VERDARA_SRC   = process.env.VERDARA_SRC   || path.join(__dirname, '..', 'verdara');
+const CORTEX_SRC    = process.env.CORTEX_SRC    || path.join(__dirname, '..', 'LumeCortex', 'dist');
+const BIOCORE_SRC   = process.env.BIOCORE_SRC   || path.join(__dirname, '..', 'biocore', 'dist');
+const NEUROCORE_SRC = process.env.NEUROCORE_SRC || path.join(__dirname, '..', 'neurocore', 'dist');
+const SOCIOCORE_SRC = process.env.SOCIOCORE_SRC || path.join(__dirname, '..', 'sociocore', 'dist');
+const GOVERNANCE_SRC= process.env.GOVERNANCE_SRC|| path.join(__dirname, '..', 'governancecore', 'dist');
 
 console.log("✦ [INVARIANT OS] Initiating Monorepo Build Pipeline...");
 
@@ -31,46 +39,28 @@ function copyDir(src, dest) {
 
 // 2. Merge Lume-V (Static Vite Build)
 console.log("   [+] Ingesting Lume-V...");
-copyDir('D:\\lume-v-site\\dist', path.join(INVARIANT_DIST, 'lume-v'));
+copyDir(LUME_V_SRC, path.join(INVARIANT_DIST, 'lume-v'));
 
 // 3. Merge Meridian (Static Build)
 console.log("   [+] Ingesting Meridian...");
-copyDir('D:\\meridian-ui\\dist', path.join(INVARIANT_DIST, 'meridian'));
+copyDir(MERIDIAN_SRC, path.join(INVARIANT_DIST, 'meridian'));
 
-// 4. Merge Hydrocore (Root Static Files)
-console.log("   [+] Ingesting Hydrocore...");
-fs.mkdirSync(path.join(INVARIANT_DIST, 'hydrocore'), { recursive: true });
-const hydrocoreAssets = [
-    'index.html', 'style.css', 'main.js', 'engine3d.js', 
-    'steam3d.js', 'vehicle3d.js', 'organism3d.js', 
-    'images', 'models', 'pwa', 'hero-bg.png'
-];
-hydrocoreAssets.forEach(asset => {
-    const srcP = path.join('D:\\hydrocore', asset);
-    const destP = path.join(INVARIANT_DIST, 'hydrocore', asset);
-    if (fs.existsSync(srcP)) {
-        if (fs.statSync(srcP).isDirectory()) {
-            copyDir(srcP, destP);
-        } else {
-            fs.copyFileSync(srcP, destP);
-        }
-    }
-});
+// HydroCore removed — canonical at https://hydrocore.dev
 
 // 5. Merge Lume-Cortex (Static Vite Build)
 console.log("   [+] Ingesting Lume-Cortex...");
-copyDir('D:\\lume-cortex\\dist', path.join(INVARIANT_DIST, 'lume-cortex'));
+copyDir(CORTEX_SRC, path.join(INVARIANT_DIST, 'lume-cortex'));
 
 // 6. Merge Verdara Ultra
 console.log("   [+] Ingesting Verdara Ultra...");
-copyDir('D:\\verdara-ultra\\dist', path.join(INVARIANT_DIST, 'verdara'));
+copyDir(VERDARA_SRC, path.join(INVARIANT_DIST, 'verdara'));
 
 // 7. Merge Human OS Nodes
 console.log("   [+] Ingesting Human OS Nodes (BioCore, NeuroCore, SocioCore, GovernanceCore)...");
-copyDir('D:\\biocore\\dist', path.join(INVARIANT_DIST, 'biocore'));
-copyDir('D:\\neurocore\\dist', path.join(INVARIANT_DIST, 'neurocore'));
-copyDir('D:\\sociocore\\dist', path.join(INVARIANT_DIST, 'sociocore'));
-copyDir('D:\\governancecore\\dist', path.join(INVARIANT_DIST, 'governancecore'));
+copyDir(BIOCORE_SRC, path.join(INVARIANT_DIST, 'biocore'));
+copyDir(NEUROCORE_SRC, path.join(INVARIANT_DIST, 'neurocore'));
+copyDir(SOCIOCORE_SRC, path.join(INVARIANT_DIST, 'sociocore'));
+copyDir(GOVERNANCE_SRC, path.join(INVARIANT_DIST, 'governancecore'));
 
-console.log("\n✦ Ecosystem Merge Complete. All sub-systems physically unified in D:\\invariant\\dist\\");
+console.log("\n✦ Ecosystem Merge Complete. All sub-systems physically unified in dist directory");
 

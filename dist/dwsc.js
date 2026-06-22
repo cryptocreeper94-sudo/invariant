@@ -142,6 +142,12 @@ const man_h2 = dom.create("h2", { className: "title-monolith", text: "WE REPLACE
 const man_p = dom.create("p", { className: "text-stark", text: "The current digital and financial architectures are built on a foundation of sand—narrative, emotion, and manipulation. Invariant is the architectural foundation of the future. We do not gamble. We do not speculate. We execute mathematical truth. If you are relying on narrative, you are already obsolete.", styles: { color: "var(--bg-secondary)", marginTop: "40px", fontSize: "1.25rem", maxWidth: "900px", margin: "40px auto 0 auto", textAlign: "center" } })
 dom.add_child(man_container, man_h2)
 dom.add_child(man_container, man_p)
+const man_p2 = dom.create("p", { 
+  className: "text-stark", 
+  text: "Every engine in this system is written in Lume — a natural-language programming language built for determinism by design. English is the syntax. Voice is the compiler. Mathematics is the output. If the language is deterministic, the system is deterministic. That is the standard.", 
+  styles: { color: "var(--bg-secondary)", marginTop: "24px", fontSize: "1rem", maxWidth: "800px", margin: "24px auto 0 auto", textAlign: "center", lineHeight: "1.8", opacity: "0.7" } 
+})
+dom.add_child(man_container, man_p2)
 dom.add_child(man_sec, man_container)
 dom.add_child(os_core, man_sec)
 
@@ -152,7 +158,20 @@ const eco_h2 = dom.create("h2", { text: "THE VANGUARD", styles: { fontSize: "1.5
 const eco_h3 = dom.create("h3", { className: "title-monolith", text: "THE DETERMINISTIC ECOSYSTEM", styles: { fontSize: "clamp(1.5rem, 5vw, 3.5rem)" } })
 const eco_track = dom.create("div", { className: "carousel-track reveal" })
 
-const eco_items = [{"title":"Meridian","desc":"Trustless Identity & State. The immutable foundational layer for uncorrupted digital execution.","link":"/meridian/index.html","img":"/assets/meridian_card.png"},{"title":"Hydrocore","desc":"A deterministic hydraulic governance engine powered by the Lume 4/42 architecture. Patent 64/032,339 Pending.","link":"/hydrocore/index.html","img":"/assets/hydrocore_card.png"},{"title":"Verdara Ultra","desc":"4/42 Deterministic Outdoor Organism — Lume-Native.","link":"/verdara/index.html","img":"/assets/verdara_card.png"},{"title":"Lume-V","desc":"Deterministic Governance Engine for Nondeterministic AI.","link":"/lume-v/index.html","img":"/assets/lumev_card.png"},{"title":"BioCore","desc":"Layer 1 Biological Flow Engine. Metabolic, circulatory, and stress state governance.","link":"/biocore/index.html","img":"/assets/biocore_card.png"},{"title":"NeuroCore","desc":"Layer 1 Cognitive Flow Engine. Neural-synaptic geometric bandwidth and attention routing.","link":"/neurocore/index.html","img":"/assets/neurocore_card.png"},{"title":"SocioCore","desc":"Layer 1 Relational Flow Engine. Immutable trust graphs and conflict friction mapping.","link":"/sociocore/index.html","img":"/assets/sociocore_card.png"},{"title":"GovernanceCore","desc":"Layer 1 Decision Flow Engine. Priority routing, operational authority, and macro-structural integrity.","link":"/governancecore/index.html","img":"/assets/governancecore_card.png"},{"title":"Axiom Core","desc":"Axiom42 Offline Engine — The Deterministic Meta-Operating System Interface.","link":"https://dwtl.io","img":"/assets/axiom_card.png"},{"title":"Axiom News","desc":"Purely deterministic, non-biased news aggregate engine. Strips narrative and emotional manipulation to deliver immutable, cryptographically-verified facts.","link":"http://localhost:3000","img":"/assets/axiom_card.png"},{"title":"Truth Engine","desc":"Layer 1 Deterministic Math Engine.","link":"http://localhost:3001","img":"/assets/meridian_card.png"},{"title":"Trust Layer","desc":"Cryptographically isolated trust fabric for multi-division enterprise execution.","link":"http://localhost:3002","img":"/assets/lumev_card.png"},{"title":"Lume-Cortex","desc":"Autonomous AI reasoning engine powering intelligent decision-making across the deterministic ecosystem.","link":"/lume-cortex/index.html","img":"/assets/lume42_card.png"},{"title":"Enterprise Daemons","desc":"Unified, deterministic operational platform governing enterprise infrastructure—LumeScan diagnostics, CORE ledger, EMP-VL verification, and Recon OS.","link":"#","img":"/assets/daemon_card.png"}]
+const eco_items = [
+  { title: "Lume Language",      desc: "The deterministic natural-language programming language. English is code. Voice is a compiler. The substrate every engine in this system is built on. 42-paper research corpus. npm: lume-lang.", link: "https://lume-lang.org",           img: "/assets/lume42_card.png",        featured: true,  domain: "lume-lang.org" },
+  { title: "HydroCore",          desc: "The world's first deterministic closed-loop hydrogen governance engine. 42 nodes. 4 flow primitives. 5 operating modes. Patent 64/032,339 pending.",                                         link: "https://hydrocore.dev",          img: "/assets/hydrocore_card.png",     domain: "hydrocore.dev" },
+  { title: "Meridian",           desc: "Wireless Energy Architecture. Deterministic signal routing and energy governance.",                                                                                                            link: "https://meridiancanon.com",      img: "/assets/meridian_card.png",      domain: "meridiancanon.com" },
+  { title: "BioCore",            desc: "Layer 1 Biological Flow Engine. Metabolic, circulatory, and stress state governance.",                                                                                                        link: "/dist/biocore/engine.html",      img: "/assets/biocore_card.png" },
+  { title: "NeuroCore",          desc: "Layer 1 Cognitive Flow Engine. Neural-synaptic geometric bandwidth and attention routing.",                                                                                                   link: "/dist/neurocore/engine.html",    img: "/assets/neurocore_card.png" },
+  { title: "SocioCore",          desc: "Layer 1 Relational Flow Engine. Immutable trust graphs and conflict friction mapping.",                                                                                                       link: "/dist/sociocore/engine.html",    img: "/assets/sociocore_card.png" },
+  { title: "GovernanceCore",     desc: "Layer 1 Decision Flow Engine. Priority routing, operational authority, and macro-structural integrity.",                                                                                      link: "/dist/governancecore/engine.html", img: "/assets/governancecore_card.png" },
+  { title: "Verdara Ultra",      desc: "4/42 Deterministic Outdoor Organism — Lume-Native.",                                                                                                                                         link: "/dist/verdara/verdara.js",       img: "/assets/verdara_card.png" },
+  { title: "Axiom News",         desc: "Purely deterministic, non-biased news aggregate engine. Strips narrative and emotional manipulation to deliver immutable, cryptographically-verified facts.",                                  link: "#", img: "/assets/axiom_card.png",    coming_soon: true },
+  { title: "Truth Engine",       desc: "Layer 1 Deterministic Math Engine.",                                                                                                                                                         link: "#", img: "/assets/meridian_card.png", coming_soon: true },
+  { title: "Trust Layer",        desc: "Cryptographically isolated trust fabric for multi-division enterprise execution.",                                                                                                            link: "#", img: "/assets/lumev_card.png",    coming_soon: true },
+  { title: "Enterprise Daemons", desc: "Unified deterministic operational platform governing enterprise infrastructure — LumeScan, CORE ledger, EMP-VL verification, and Recon OS.",                                                 link: "#", img: "/assets/daemon_card.png",   coming_soon: true }
+]
 
 for (const item of eco_items) {
     const card = dom.create("a", { className: "carousel-card", attrs: { onclick: "openApp('" + item.link + "', '" + item.title + "'); return false;", href: "#" } })
@@ -174,6 +193,32 @@ for (const item of eco_items) {
     dom.add_child(c_inner, img)
     dom.add_child(c_inner, c_content)
     dom.add_child(card, c_inner)
+    // Featured treatment (Lume Language)
+    if (item.featured) {
+      card.style.border = '1px solid rgba(6,182,212,0.4)';
+      card.style.boxShadow = '0 0 24px rgba(6,182,212,0.08)';
+      const badge = document.createElement('div');
+      badge.textContent = 'GENESIS';
+      badge.style.cssText = 'font-size:9px;font-weight:700;letter-spacing:0.15em;padding:3px 8px;background:rgba(6,182,212,0.1);border:1px solid rgba(6,182,212,0.3);border-radius:2px;color:rgba(6,182,212,0.8);font-family:"Space Mono",monospace;margin-bottom:8px;display:inline-block;';
+      card.insertBefore(badge, card.firstChild);
+    }
+    // Domain tag (for external live sites)
+    if (item.domain) {
+      const domainTag = document.createElement('div');
+      domainTag.textContent = item.domain;
+      domainTag.style.cssText = 'font-family:"Space Mono",monospace;font-size:9px;color:rgba(255,255,255,0.2);letter-spacing:0.08em;margin-top:8px;border-top:1px solid rgba(255,255,255,0.06);padding-top:8px;';
+      card.appendChild(domainTag);
+    }
+    // Coming soon treatment
+    if (item.coming_soon) {
+      const badge = document.createElement('div');
+      badge.textContent = 'COMING SOON';
+      badge.style.cssText = 'position:absolute;top:12px;right:12px;font-size:9px;font-weight:700;letter-spacing:0.12em;padding:3px 8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:2px;color:rgba(255,255,255,0.3);font-family:"Space Mono",monospace;';
+      card.style.position = 'relative';
+      card.style.opacity = '0.45';
+      card.style.pointerEvents = 'none';
+      card.appendChild(badge);
+    }
     dom.add_child(eco_track, card)
 }
 const eco_nav = dom.create("div", { className: "carousel-nav reveal" })

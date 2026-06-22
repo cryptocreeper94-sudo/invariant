@@ -41,7 +41,7 @@ function transformLume(src) {
     let multiLineVarPrefix = ''
 
     for (let i = 0; i < lines.length; i++) {
-        let line = lines[i]
+        let line = lines[i].replace(/\r$/, '')
 
         // Convert /// comments to //
         if (line.trimStart().startsWith('///')) {
@@ -398,7 +398,7 @@ console.log('  ⟐ Stage 3: VM execution test...')
         tagName: tag, style: {}, classList: { add(){}, remove(){}, toggle(){} },
         setAttribute(){}, addEventListener(){}, appendChild(c){ return c },
         animate(){ return {} }, textContent: '', innerHTML: '', id: '', className: '',
-        children: [], parentNode: null, firstChild: null, remove(){},
+        children: [], parentNode: null, firstChild: null, remove(){}, insertBefore(){},
         querySelectorAll(){ return [] }, querySelector(){ return makeEl() },
         focus(){}, value: '', dataset: {}, getBoundingClientRect(){ return { top: 0, left: 0, width: 0, height: 0 } },
     })

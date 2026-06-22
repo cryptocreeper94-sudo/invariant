@@ -235,5 +235,69 @@
     "buildTimeMs": 537,
     "valid": true,
     "errors": []
+  },
+  {
+    "timestamp": "2026-06-22T01:47:09.974Z",
+    "commit": "66494c7f",
+    "bundleSize": 19372,
+    "sourceLines": 184,
+    "buildTimeMs": 321,
+    "valid": false,
+    "errors": [
+      {
+        "stage": 1,
+        "error": "Unexpected token 'const'",
+        "sourceLine": null
+      },
+      {
+        "stage": 3,
+        "error": "Unexpected token 'const'",
+        "sourceLine": 81
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-06-22T01:48:13.571Z",
+    "commit": "66494c7f",
+    "bundleSize": 19371,
+    "sourceLines": 184,
+    "buildTimeMs": 283,
+    "valid": false,
+    "errors": [
+      {
+        "stage": 1,
+        "error": "Unexpected identifier 'each'",
+        "sourceLine": null
+      },
+      {
+        "stage": 3,
+        "error": "Unexpected identifier 'each'",
+        "sourceLine": 80
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-06-22T01:48:47.999Z",
+    "commit": "66494c7f",
+    "bundleSize": 19226,
+    "sourceLines": 184,
+    "buildTimeMs": 239,
+    "valid": false,
+    "errors": [
+      {
+        "stage": 3,
+        "error": "card.insertBefore is not a function",
+        "sourceLine": 107
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-06-22T01:50:39.699Z",
+    "commit": "66494c7f",
+    "bundleSize": 19226,
+    "sourceLines": 184,
+    "buildTimeMs": 238,
+    "valid": true,
+    "errors": []
   }
 ]

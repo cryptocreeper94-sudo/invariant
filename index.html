@@ -93,20 +93,125 @@
 </head>
 <body>
   <script>
-    // Spatial App Shell
-    function openApp(url, title) { 
-      document.getElementById('app-iframe').src = url; 
-      document.getElementById('overlay-title').innerText = title + ' // SECURE NODE'; 
-      document.getElementById('app-overlay').classList.add('active'); 
+    const ENGINE_MAP = {
+      'lume':           { url: 'https://lume-lang.org',              title: 'LUME LANGUAGE' },
+      'hydrocore':      { url: 'https://hydrocore.dev',              title: 'HYDROCORE' },
+      'meridian':       { url: 'https://meridiancanon.com',          title: 'MERIDIAN' },
+      'biocore':        { url: '/dist/biocore/engine.html',          title: 'BIOCORE' },
+      'governancecore': { url: '/dist/governancecore/engine.html',   title: 'GOVERNANCECORE' },
+      'neurocore':      { url: '/dist/neurocore/engine.html',        title: 'NEUROCORE' },
+      'sociocore':      { url: '/dist/sociocore/engine.html',        title: 'SOCIOCORE' },
+      'verdara':        { url: '/dist/verdara/verdara.js',           title: 'VERDARA' },
+    };
+    function openApp(url, title) {
+      const iframe = document.getElementById('app-iframe');
+      const isExternal = url.startsWith('http');
+      iframe.src = url;
+      document.getElementById('overlay-title').textContent = title;
+      document.getElementById('app-overlay').classList.add('active');
       document.body.classList.add('app-open');
-      document.body.style.overflow = 'hidden'; 
-    } 
-    function closeApp() { 
-      document.getElementById('app-overlay').classList.remove('active'); 
-      document.body.classList.remove('app-open');
-      setTimeout(() => { document.getElementById('app-iframe').src = 'about:blank'; }, 500); 
-      document.body.style.overflow = 'auto'; 
+      const key = Object.keys(ENGINE_MAP).find(k => ENGINE_MAP[k].title === title) || '';
+      if (key) window.location.hash = key;
+      if (isExternal) {
+        iframe.onload = () => {
+          try {
+            const doc = iframe.contentDocument;
+            if (!doc || doc.URL === 'about:blank') throw new Error('blocked');
+          } catch(e) {
+            showExternalFallback(url, title);
+          }
+        };
+      }
     }
+    function showExternalFallback(url, title) {
+      document.getElementById('app-iframe').srcdoc = `
+        <html><body style="margin:0;background:#050505;display:flex;align-items:center;justify-content:center;height:100vh;font-family:'Inter',sans-serif;flex-direction:column;gap:24px;">
+          <div style="color:rgba(255,255,255,0.3);font-size:11px;letter-spacing:0.15em;text-transform:uppercase;">${title}</div>
+          <a href="${url}" target="_blank" style="background:#fff;color:#000;padding:12px 28px;border-radius:2px;text-decoration:none;font-weight:700;font-size:13px;letter-spacing:0.05em;text-transform:uppercase;">Open ${title} →</a>
+          <div style="color:rgba(255,255,255,0.15);font-size:10px;">${url}</div>
+        </body></html>`;
+    }
+    function closeApp() {
+      document.getElementById('app-overlay').classList.remove('active');
+      document.body.classList.remove('app-open');
+      setTimeout(() => { document.getElementById('app-iframe').src = 'about:blank'; }, 500);
+      history.pushState('', document.title, window.location.pathname);
+    }
+    // Auto-launch from hash on page load
+    window.addEventListener('load', () => {
+      const hash = window.location.hash.slice(1);
+      if (hash && ENGINE_MAP[hash]) {
+        const e = ENGINE_MAP[hash];
+        openApp(e.url, e.title);
+      }
+    });
+
+    // ── Invariant Cross-Core Signal Bus ──
+    const InvariantBus = {
+      _listeners: {}, _state: {},
+      publish(core, nodeId, value) {
+        this._state[core + ':' + nodeId] = value;
+        (this._listeners[core + ':' + nodeId] || []).forEach(fn => fn(value, core, nodeId));
+        (this._listeners['*'] || []).forEach(fn => fn(value, core, nodeId));
+      },
+      subscribe(core, nodeId, fn) {
+        const key = core + ':' + nodeId;
+        if (!this._listeners[key]) this._listeners[key] = [];
+        this._listeners[key].push(fn);
+      },
+      subscribeAll(fn) {
+        if (!this._listeners['*']) this._listeners['*'] = [];
+        this._listeners['*'].push(fn);
+      }
+    };
+    window.InvariantBus = InvariantBus;
+    // ── Cross-Core Status Bar ──
+    function buildStatusBar() {
+      const bar = document.createElement('div');
+      bar.style.cssText = 'position:fixed;bottom:0;left:0;width:100%;height:32px;background:rgba(5,5,5,0.96);border-top:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;justify-content:center;gap:32px;z-index:10000;font-family:"Inter",sans-serif;font-size:10px;letter-spacing:0.1em;';
+      const cores = [
+        { key: 'LUME',           label: 'LUME',       static: true },
+        { key: 'HYDROCORE',      label: 'HYDROCORE',  static: true },
+        { key: 'MERIDIAN',       label: 'MERIDIAN',   static: true },
+        { key: 'BIOCORE',        label: 'BIOCORE',    static: false },
+        { key: 'GOVERNANCECORE', label: 'GOVERNANCE', static: false },
+        { key: 'NEUROCORE',      label: 'NEURO',      static: false },
+        { key: 'SOCIOCORE',      label: 'SOCIO',      static: false },
+      ];
+      const indicators = {};
+      cores.forEach(core => {
+        const item = document.createElement('div');
+        item.style.cssText = 'display:flex;align-items:center;gap:6px;color:rgba(255,255,255,0.25);cursor:pointer;transition:color 0.3s;';
+        const dot = document.createElement('div');
+        dot.style.cssText = 'width:6px;height:6px;border-radius:50%;background:#222;transition:background 0.5s,box-shadow 0.5s;';
+        const label = document.createElement('span');
+        label.textContent = core.label;
+        item.appendChild(dot);
+        item.appendChild(label);
+        item.addEventListener('click', () => {
+          const mapKey = core.key.toLowerCase().replace('governancecore','governancecore');
+          const e = ENGINE_MAP[mapKey] || ENGINE_MAP[core.key.toLowerCase()];
+          if (e) openApp(e.url, e.title);
+        });
+        bar.appendChild(item);
+        indicators[core.key] = dot;
+        if (core.static) {
+          setTimeout(() => {
+            dot.style.background = '#22c55e';
+            dot.style.boxShadow = '0 0 6px #22c55e';
+          }, 800);
+        }
+      });
+      document.body.appendChild(bar);
+      InvariantBus.subscribeAll((value, core) => {
+        const key = core.toUpperCase();
+        if (!indicators[key]) return;
+        const color = value >= 70 ? '#22c55e' : value >= 40 ? '#f59e0b' : '#ef4444';
+        indicators[key].style.background = color;
+        indicators[key].style.boxShadow = `0 0 6px ${color}`;
+      });
+    }
+    buildStatusBar();
 
     // Scroll Reveal Observer
     document.addEventListener('DOMContentLoaded', () => {
