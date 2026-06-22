@@ -39,7 +39,12 @@ function copyDir(src, dest) {
 
 // 2. Merge Lume-V (Static Vite Build)
 console.log("   [+] Ingesting Lume-V...");
-copyDir(LUME_V_SRC, path.join(INVARIANT_DIST, 'lume-v'));
+if (fs.existsSync(LUME_V_SRC)) {
+  copyDir(LUME_V_SRC, path.join(INVARIANT_DIST, 'lumev'));
+  console.log('✓ Lume-V copied');
+} else {
+  console.warn('⚠ LUME_V_SRC not found — skipping Lume-V copy');
+}
 
 // 3. Merge Meridian (Static Build)
 console.log("   [+] Ingesting Meridian...");
