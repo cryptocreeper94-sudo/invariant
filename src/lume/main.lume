@@ -148,13 +148,56 @@ dom.add_child(eco_sec, eco_container)
 dom.add_child(os_core, eco_sec)
 
 /// Footer
-define footer = dom.create("footer", { className: "section section-dark reveal", styles: { borderTop: "1px solid var(--border)", padding: "64px 0", minHeight: "auto" } })
-define footer_container = dom.create("div", { className: "container", styles: { display: "flex", justifyContent: "space-between", alignItems: "center" } })
-define footer_logo = dom.create("div", { text: "INVARIANT.", styles: { fontFamily: "var(--font-heading)", fontWeight: "900", fontSize: "2rem", letterSpacing: "0.1em", color: "var(--text-secondary)" } })
-define footer_copy = dom.create("div", { text: "© 2026 The Determinism Standard. All Rights Reserved.", styles: { fontFamily: "var(--font-body)", color: "rgba(255,255,255,0.2)" } })
-dom.add_child(footer_container, footer_logo)
-dom.add_child(footer_container, footer_copy)
-dom.add_child(footer, footer_container)
+define footer = dom.create("footer", { className: "section section-dark reveal", styles: { borderTop: "1px solid rgba(255,255,255,0.04)", background: "#060810", padding: "64px 24px 24px", minHeight: "auto" } })
+define f_grid = dom.create("div", { className: "container", styles: { display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: "24px", maxWidth: "1100px", margin: "0 auto" } })
+
+define brand_col = dom.create("div", {})
+define brand_title = dom.create("div", { text: "INVARIANT", styles: { fontFamily: "var(--font-heading)", fontWeight: "900", fontSize: "1.2rem", letterSpacing: "0.1em", color: "rgba(255,255,255,0.8)", marginBottom: "12px" } })
+define brand_desc = dom.create("p", { text: "The architectural foundation of the future. Part of the DarkWave Studios Trust Layer ecosystem.", styles: { fontFamily: "var(--font-body)", fontSize: "11px", color: "rgba(255,255,255,0.2)", lineHeight: "1.6", maxWidth: "200px" } })
+dom.add_child(brand_col, brand_title)
+dom.add_child(brand_col, brand_desc)
+
+define eco_col = dom.create("div", {})
+define eco_title = dom.create("h4", { text: "ECOSYSTEM", styles: { fontFamily: "var(--font-heading)", fontSize: "11px", fontWeight: "600", letterSpacing: "0.06em", color: "rgba(255,255,255,0.3)", marginBottom: "12px" } })
+dom.add_child(eco_col, eco_title)
+define eco_links = [ { text: "DarkWave Studios", href: "https://darkwavestudios.io" }, { text: "Trust Layer", href: "https://dwtl.io" }, { text: "Axiom42 API", href: "https://axiom42.com" }, { text: "Lume Language", href: "https://lume-lang.org" } ]
+for each l in eco_links
+  define a = dom.create("a", { text: l.text, attrs: { href: l.href, target: "_blank" }, styles: { display: "block", fontFamily: "var(--font-body)", fontSize: "12px", color: "rgba(255,255,255,0.4)", textDecoration: "none", padding: "4px 0" } })
+  dom.add_child(eco_col, a)
+
+define prod_col = dom.create("div", {})
+define prod_title = dom.create("h4", { text: "PRODUCT", styles: { fontFamily: "var(--font-heading)", fontSize: "11px", fontWeight: "600", letterSpacing: "0.06em", color: "rgba(255,255,255,0.3)", marginBottom: "12px" } })
+dom.add_child(prod_col, prod_title)
+define prod_links = [ { text: "HydroCore", href: "https://hydrocore.dev" }, { text: "Meridian", href: "https://meridiancanon.com" }, { text: "BioCore", href: "/dist/biocore/engine.html" }, { text: "NeuroCore", href: "/dist/neurocore/engine.html" } ]
+for each l in prod_links
+  define a = dom.create("a", { text: l.text, attrs: { href: l.href }, styles: { display: "block", fontFamily: "var(--font-body)", fontSize: "12px", color: "rgba(255,255,255,0.4)", textDecoration: "none", padding: "4px 0" } })
+  dom.add_child(prod_col, a)
+
+define leg_col = dom.create("div", {})
+define leg_title = dom.create("h4", { text: "LEGAL", styles: { fontFamily: "var(--font-heading)", fontSize: "11px", fontWeight: "600", letterSpacing: "0.06em", color: "rgba(255,255,255,0.3)", marginBottom: "12px" } })
+dom.add_child(leg_col, leg_title)
+define leg_links = [ { text: "Terms of Service", href: "https://darkwavestudios.io/terms" }, { text: "Privacy Policy", href: "https://darkwavestudios.io/privacy" } ]
+for each l in leg_links
+  define a = dom.create("a", { text: l.text, attrs: { href: l.href, target: "_blank" }, styles: { display: "block", fontFamily: "var(--font-body)", fontSize: "12px", color: "rgba(255,255,255,0.4)", textDecoration: "none", padding: "4px 0" } })
+  dom.add_child(leg_col, a)
+
+dom.add_child(f_grid, brand_col)
+dom.add_child(f_grid, eco_col)
+dom.add_child(f_grid, prod_col)
+dom.add_child(f_grid, leg_col)
+dom.add_child(footer, f_grid)
+
+define f_bot = dom.create("div", { className: "container", styles: { marginTop: "32px", paddingTop: "20px", borderTop: "1px solid rgba(255,255,255,0.04)", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "12px" } })
+define f_copy = dom.create("p", { text: "DarkWave Studios LLC. All rights reserved. 2026", styles: { fontFamily: "var(--font-body)", fontSize: "10px", color: "rgba(255,255,255,0.12)", margin: "0" } })
+define f_pat_wrap = dom.create("div", { styles: { display: "flex", gap: "4px", alignItems: "center" } })
+define f_pat1 = dom.create("span", { text: "Pat. App. 64/032,339", styles: { fontSize: "8px", fontFamily: "monospace", color: "rgba(239,68,68,0.4)", padding: "2px 6px", borderRadius: "8px", background: "rgba(239,68,68,0.04)", border: "1px solid rgba(239,68,68,0.08)" } })
+define f_pat2 = dom.create("span", { text: "Pat. App. 64/047,512", styles: { fontSize: "8px", fontFamily: "monospace", color: "rgba(239,68,68,0.4)", padding: "2px 6px", borderRadius: "8px", background: "rgba(239,68,68,0.04)", border: "1px solid rgba(239,68,68,0.08)" } })
+dom.add_child(f_pat_wrap, f_pat1)
+dom.add_child(f_pat_wrap, f_pat2)
+dom.add_child(f_bot, f_copy)
+dom.add_child(f_bot, f_pat_wrap)
+dom.add_child(footer, f_bot)
+
 dom.add_child(os_core, footer)
 
 /// Mount OS Core
