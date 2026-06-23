@@ -11,6 +11,7 @@ const BIOCORE_SRC   = process.env.BIOCORE_SRC   || path.join(__dirname, '..', 'b
 const NEUROCORE_SRC = process.env.NEUROCORE_SRC || path.join(__dirname, '..', 'neurocore', 'dist');
 const SOCIOCORE_SRC = process.env.SOCIOCORE_SRC || path.join(__dirname, '..', 'sociocore', 'dist');
 const GOVERNANCE_SRC= process.env.GOVERNANCE_SRC|| path.join(__dirname, '..', 'governancecore', 'dist');
+const FLA_SRC       = process.env.FLA_SRC       || path.join(__dirname, '..', 'FLA', 'dist');
 
 console.log("✦ [INVARIANT OS] Initiating Monorepo Build Pipeline...");
 
@@ -66,6 +67,10 @@ copyDir(BIOCORE_SRC, path.join(INVARIANT_DIST, 'biocore'));
 copyDir(NEUROCORE_SRC, path.join(INVARIANT_DIST, 'neurocore'));
 copyDir(SOCIOCORE_SRC, path.join(INVARIANT_DIST, 'sociocore'));
 copyDir(GOVERNANCE_SRC, path.join(INVARIANT_DIST, 'governancecore'));
+
+// 8. Merge Fractal Ledger Architecture (FLA)
+console.log("   [+] Ingesting Fractal Ledger Architecture (FLA)...");
+copyDir(FLA_SRC, path.join(INVARIANT_DIST, 'fla'));
 
 console.log("\n✦ Ecosystem Merge Complete. All sub-systems physically unified in dist directory");
 

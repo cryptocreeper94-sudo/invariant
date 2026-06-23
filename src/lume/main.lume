@@ -75,8 +75,8 @@ define eco_items = [
   { title: "Verdara Ultra", desc: "4/42 Deterministic Outdoor Organism — Lume-Native.", link: "/dist/verdara/verdara.js", img: "/assets/verdara_card.png" },
   { title: "Axiom News", desc: "Purely deterministic, non-biased news aggregate engine. Strips narrative and emotional manipulation to deliver immutable, cryptographically-verified facts.", link: "#", img: "/assets/axiom_card.png", coming_soon: true },
   { title: "Truth Engine", desc: "Layer 1 Deterministic Math Engine.", link: "#", img: "/assets/meridian_card.png", coming_soon: true },
-  { title: "Trust Layer", desc: "Cryptographically isolated trust fabric for multi-division enterprise execution.", link: "#", img: "/assets/axiom_card.png", coming_soon: true },
-  { title: "Enterprise Daemons", desc: "Unified deterministic operational platform governing enterprise infrastructure — LumeScan, CORE ledger, EMP-VL verification, and Recon OS.", link: "#", img: "/assets/daemon_card.png", coming_soon: true }
+  { title: "Fractal Ledger", desc: "Layer 1 Proof-of-Authority architecture providing absolute cryptographical trust. Hosts the live FLA-PL and FLA-VL chains.", link: "https://fla.tlid.io", img: "/assets/axiom_card.png", domain: "fla.tlid.io" },
+  { title: "Lume-Cortex OS", desc: "The definitive cloud gate to the deterministic network. Streams local electron-built execution engines directly into the browser.", link: "/dist/lume-cortex/index.html", img: "/assets/daemon_card.png" }
 ]
 
 for each item in eco_items
