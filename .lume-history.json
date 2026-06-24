@@ -253,5 +253,38 @@
     "buildTimeMs": 1144,
     "valid": true,
     "errors": []
+  },
+  {
+    "timestamp": "2026-06-24T19:06:05.840Z",
+    "commit": "c2526a60",
+    "bundleSize": 21017,
+    "sourceLines": 137,
+    "buildTimeMs": 309,
+    "valid": false,
+    "errors": [
+      {
+        "stage": 1,
+        "error": "Unexpected string",
+        "sourceLine": null
+      },
+      {
+        "stage": 2,
+        "error": "Paren depth: 0, Brace depth: -1"
+      },
+      {
+        "stage": 3,
+        "error": "Unexpected string",
+        "sourceLine": 59
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-06-24T19:06:46.000Z",
+    "commit": "c2526a60",
+    "bundleSize": 17412,
+    "sourceLines": 137,
+    "buildTimeMs": 241,
+    "valid": true,
+    "errors": []
   }
 ]
