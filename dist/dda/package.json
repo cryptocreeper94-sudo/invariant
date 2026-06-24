@@ -1,0 +1,12 @@
+{
+  "name": "dda-website",
+  "version": "1.0.0",
+  "description": "DDA — The Deterministic AI Agent | Built with Lume",
+  "type": "module",
+  "scripts": {
+    "build": "node build.js",
+    "dev": "node build.js && npx -y serve ."
+  },
+  "author": "DarkWave Studios LLC",
+  "license": "CC-BY-4.0"
+}

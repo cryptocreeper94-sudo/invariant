@@ -57,9 +57,9 @@ hydrocoreAssets.forEach(asset => {
     }
 });
 
-// 5. Merge Lume-Cortex (Static Vite Build)
+// 5. Merge Lume-Cortex (Web App + PWA — NOT the old Electron build)
 console.log("   [+] Ingesting Lume-Cortex...");
-copyDir('D:\\lume-cortex\\dist', path.join(INVARIANT_DIST, 'lume-cortex'));
+copyDir('D:\\LumeCortex', path.join(INVARIANT_DIST, 'lume-cortex'));
 
 // 6. Merge Verdara Ultra
 console.log("   [+] Ingesting Verdara Ultra...");
@@ -72,5 +72,12 @@ copyDir('D:\\neurocore\\dist', path.join(INVARIANT_DIST, 'neurocore'));
 copyDir('D:\\sociocore\\dist', path.join(INVARIANT_DIST, 'sociocore'));
 copyDir('D:\\governancecore\\dist', path.join(INVARIANT_DIST, 'governancecore'));
 
-console.log("\n✦ Ecosystem Merge Complete. All sub-systems physically unified in D:\\invariant\\dist\\");
+// 8. Merge Truth Engine (Axiom Core Radar — Pulse-driven market manipulation detection)
+console.log("   [+] Ingesting Truth Engine...");
+copyDir('D:\\truth-platform\\dist', path.join(INVARIANT_DIST, 'truth-engine'));
 
+// 9. Merge DDA — Deterministic Daemons (product/sales page)
+console.log("   [+] Ingesting Deterministic Daemons (DDA)...");
+copyDir('D:\\dda\\website', path.join(INVARIANT_DIST, 'dda'));
+
+console.log("\n✦ Ecosystem Merge Complete. All sub-systems physically unified in D:\\invariant\\dist\\");
