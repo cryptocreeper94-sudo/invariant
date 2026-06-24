@@ -1,0 +1,32 @@
+{
+  "name": "Verdara Ultra — Outdoor Organism Intelligence",
+  "short_name": "Verdara",
+  "description": "4/42 deterministic outdoor governance organism — terrain, weather, environmental, and biological flow for outdoor activity.",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0a0a12",
+  "theme_color": "#10b981",
+  "categories": ["science", "technology", "outdoors"],
+  "lang": "en-US",
+  "icons": [
+    {
+      "src": "/pwa/icon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any",
+      "purpose": "any"
+    },
+    {
+      "src": "/pwa/icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/pwa/icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ]
+}

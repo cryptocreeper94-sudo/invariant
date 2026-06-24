@@ -63,7 +63,7 @@ copyDir('D:\\LumeCortex', path.join(INVARIANT_DIST, 'lume-cortex'));
 
 // 6. Merge Verdara Ultra
 console.log("   [+] Ingesting Verdara Ultra...");
-copyDir('D:\\verdara-ultra\\dist', path.join(INVARIANT_DIST, 'verdara'));
+copyDir('D:\\verdara-ultra', path.join(INVARIANT_DIST, 'verdara'));
 
 // 7. Merge Human OS Nodes
 console.log("   [+] Ingesting Human OS Nodes (BioCore, NeuroCore, SocioCore, GovernanceCore)...");

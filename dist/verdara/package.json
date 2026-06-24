@@ -1,0 +1,12 @@
+{
+  "name": "verdara-ultra",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "4/42 Deterministic Outdoor Organism — Lume-Native",
+  "scripts": {
+    "build": "node build.js",
+    "dev": "node build.js && npx -y http-server . -p 8042 -c-1 --cors"
+  },
+  "author": "DarkWave Studios LLC",
+  "license": "UNLICENSED"
+}
