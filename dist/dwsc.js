@@ -164,9 +164,16 @@ for (const item of eco_items) {
     const c_desc = dom.create("p", { className: "card-desc", text: item.desc })
     dom.add_child(c_top, c_title)
     dom.add_child(c_top, c_desc)
+    const isLocked = item.title === "AXIOM42";
     const c_bot = dom.create("div", { className: "card-bot" })
-    const bot_span1 = dom.create("span", { text: "INITIATE OS" })
-    const bot_span2 = dom.create("span", { text: "→" })
+    const bot_span1 = dom.create("span", { text: isLocked ? "STATUS: INGESTING KNOWLEDGE..." : "INITIATE OS" })
+    const bot_span2 = dom.create("span", { text: isLocked ? "" : "→" })
+    if (isLocked) {
+        bot_span1.style.color = "#ff3333";
+        bot_span1.style.letterSpacing = "0.05em";
+        card.style.cursor = "not-allowed";
+        card.setAttribute("onclick", "return false;");
+    }
     dom.add_child(c_bot, bot_span1)
     dom.add_child(c_bot, bot_span2)
     dom.add_child(c_content, c_top)
