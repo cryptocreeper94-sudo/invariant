@@ -2,128 +2,68 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>GovernanceCore | Telemetry Engine</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GovernanceCore &mdash; Layer 1 Decision Flow Engine</title>
+  <meta name="description" content="Deterministic governance engine. Rules coherence, coordination, fairness, and conflict resolution routing — powered by the Lume 4/42 architecture.">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&family=Space+Mono:wght@400;700&display=swap');
-
-    :root {
-      --bg: #020202;
-      --panel: #0a0a0c;
-      --border: rgba(255,255,255,0.1);
-      --text: #ffffff;
-      --text-muted: #666;
-      --optimal: #38bdf8;
-      --caution: #f59e0b;
-      --critical: #ef4444;
-      --font-ui: 'Outfit', sans-serif;
-      --font-mono: 'Space Mono', monospace;
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: var(--bg); color: var(--text); font-family: var(--font-ui); padding: 32px; overflow-x: hidden; }
-
-    .header { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 1px solid var(--border); padding-bottom: 16px; margin-bottom: 32px; }
-    .title { font-size: 2rem; font-weight: 900; letter-spacing: 0.1em; text-transform: uppercase; }
-    .subtitle { font-size: 1rem; color: var(--text-muted); }
-    .live-indicator { display: flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 0.8rem; color: var(--optimal); }
-    .dot { width: 8px; height: 8px; background: var(--optimal); border-radius: 50%; animation: pulse 1s infinite; box-shadow: 0 0 10px var(--optimal); }
-
-    @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
-
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
-    
-    .node-card { background: var(--panel); border: 1px solid var(--border); padding: 20px; border-radius: 4px; display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden; }
-    .node-card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--optimal); transition: background 0.3s; }
-    .node-card.caution::before { background: var(--caution); }
-    .node-card.critical::before { background: var(--critical); }
-
-    .node-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }
-    .node-id { font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-muted); }
-    .node-name { font-size: 1.1rem; font-weight: 600; margin-top: 4px; }
-    
-    .node-data { display: flex; justify-content: space-between; align-items: flex-end; font-family: var(--font-mono); }
-    .node-value { font-size: 2.5rem; font-weight: 700; line-height: 1; transition: color 0.3s; }
-    .node-metric { font-size: 0.9rem; color: var(--text-muted); padding-bottom: 4px; }
-
-    .chart { height: 40px; width: 100%; margin-top: 16px; display: flex; align-items: flex-end; gap: 2px; }
-    .bar { flex: 1; background: var(--border); transition: height 0.2s ease, background 0.3s ease; }
-    .bar.active { background: var(--optimal); }
-    .node-card.caution .bar.active { background: var(--caution); }
-    .node-card.critical .bar.active { background: var(--critical); }
+    :root { --bg:#030303;--bg-panel:#0a0a0c;--border:rgba(255,255,255,0.08);--text:#fff;--text-muted:#555;--accent:#10b981;--accent-glow:rgba(16,185,129,0.3);--optimal:#22c55e;--caution:#f59e0b;--critical:#ef4444;--font-ui:'Outfit',sans-serif;--font-mono:'Space Mono',monospace; }
+    *{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}body{background:var(--bg);color:var(--text);font-family:var(--font-ui);line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+    .noise{position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:9999;opacity:0.03;background-image:url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22n%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23n)%22/%3E%3C/svg%3E')}
+    .topbar{position:sticky;top:0;z-index:1000;display:flex;justify-content:space-between;align-items:center;padding:0 32px;height:56px;background:rgba(3,3,3,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}.topbar-brand{display:flex;align-items:center;gap:16px}.topbar-logo{font-weight:900;font-size:1rem;letter-spacing:0.15em;text-transform:uppercase}.topbar-tag{font-family:var(--font-mono);font-size:0.7rem;color:var(--text-muted);letter-spacing:0.05em;background:rgba(255,255,255,0.04);padding:4px 10px;border-radius:2px}.eq-badge{display:flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:0.75rem;color:var(--optimal)}.eq-dot{width:8px;height:8px;border-radius:50%;background:var(--optimal);box-shadow:0 0 8px var(--optimal);animation:pulse 2s ease infinite}@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+    .hero{padding:120px 48px 80px;text-align:center;position:relative;overflow:hidden}.hero::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:600px;height:600px;background:radial-gradient(circle,var(--accent-glow) 0%,transparent 70%);opacity:0.15;pointer-events:none}.hero-title{font-size:clamp(2.5rem,6vw,5rem);font-weight:900;letter-spacing:-0.03em;line-height:0.95;margin-bottom:24px}.hero-title .accent{color:var(--accent)}.hero-sub{font-size:clamp(1rem,2vw,1.3rem);color:var(--text-muted);max-width:700px;margin:0 auto;font-weight:300;line-height:1.7}.hero-meta{display:flex;justify-content:center;gap:48px;margin-top:48px;font-family:var(--font-mono);font-size:0.8rem;color:var(--text-muted)}.hero-meta .val{font-size:1.8rem;font-weight:900;color:var(--text);display:block;font-family:var(--font-ui)}
+    .section{padding:100px 48px;border-top:1px solid var(--border)}.section-title{font-size:0.8rem;font-weight:800;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}.section-subtitle{font-size:clamp(1.5rem,3vw,2.5rem);font-weight:800;letter-spacing:-0.02em;max-width:700px}.section-header{margin-bottom:64px}
+    .explainer-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px}.explainer-step{background:var(--bg-panel);border:1px solid var(--border);padding:32px;position:relative;overflow:hidden}.explainer-step::before{content:'';position:absolute;top:0;left:0;width:100%;height:3px;background:linear-gradient(90deg,var(--accent) 0%,transparent 100%)}.step-num{font-family:var(--font-mono);font-size:0.75rem;color:var(--accent);margin-bottom:16px}.step-title{font-weight:800;font-size:1.2rem;margin-bottom:12px;text-transform:uppercase;letter-spacing:0.05em}.step-desc{color:var(--text-muted);font-size:0.95rem;line-height:1.7}.step-desc strong{color:var(--text)}
+    .organism-section{display:grid;grid-template-columns:1fr 1fr;gap:48px;padding:100px 48px;border-top:1px solid var(--border)}@media(max-width:900px){.organism-section{grid-template-columns:1fr}}.ring-wrapper{display:flex;flex-direction:column;align-items:center;gap:24px}.ring-container{position:relative;width:380px;height:380px}.ring-canvas{width:100%;height:100%}.ring-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}.ring-score{font-size:2.5rem;font-weight:900}.ring-label{font-family:var(--font-mono);font-size:0.7rem;color:var(--text-muted);letter-spacing:0.15em;text-transform:uppercase;margin-top:4px}.primitive-tabs{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}.prim-tab{font-family:var(--font-mono);font-size:0.7rem;padding:6px 16px;border:1px solid var(--border);background:transparent;color:var(--text-muted);cursor:pointer;letter-spacing:0.1em;text-transform:uppercase;transition:all 0.3s}.prim-tab.active,.prim-tab:hover{border-color:var(--accent);color:var(--accent);background:rgba(16,185,129,0.08)}
+    .inspector{display:flex;flex-direction:column;gap:8px;max-height:500px;overflow-y:auto;padding-right:8px}.inspector::-webkit-scrollbar{width:4px}.inspector::-webkit-scrollbar-track{background:var(--bg)}.inspector::-webkit-scrollbar-thumb{background:var(--border)}.node-row{display:grid;grid-template-columns:48px 1fr 70px 120px;align-items:center;gap:12px;padding:10px 16px;background:var(--bg-panel);border:1px solid var(--border);transition:all 0.3s}.node-row:hover{border-color:rgba(255,255,255,0.15);background:rgba(255,255,255,0.03)}.node-id{font-family:var(--font-mono);font-size:0.75rem;color:var(--text-muted)}.node-name{font-size:0.85rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.node-val{font-family:var(--font-mono);font-size:0.9rem;font-weight:700;text-align:right}.node-bar-wrap{height:6px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden}.node-bar{height:100%;border-radius:3px;transition:width 0.5s ease,background 0.5s ease}
+    .telemetry-section{padding:100px 48px;border-top:1px solid var(--border)}.telem-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}.telem-card{background:var(--bg-panel);border:1px solid var(--border);padding:24px;position:relative;overflow:hidden}.telem-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--optimal);transition:background 0.3s}.telem-card.caution::before{background:var(--caution)}.telem-card.critical::before{background:var(--critical)}.telem-id{font-family:var(--font-mono);font-size:0.75rem;color:var(--text-muted)}.telem-name{font-size:1rem;font-weight:700;margin-top:4px}.telem-value{font-family:var(--font-mono);font-size:2.2rem;font-weight:800;transition:color 0.3s}.telem-unit{font-family:var(--font-mono);font-size:0.8rem;color:var(--text-muted)}.sparkline{height:32px;display:flex;align-items:flex-end;gap:2px;margin-top:16px}.spark-bar{flex:1;background:var(--border);transition:height 0.3s,background 0.3s;border-radius:1px}
+    .arch-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin-top:48px}@media(max-width:768px){.arch-grid{grid-template-columns:repeat(2,1fr)}}.arch-block{background:var(--bg-panel);border:1px solid var(--border);padding:32px 24px;text-align:center;position:relative;overflow:hidden}.arch-block::after{content:'';position:absolute;bottom:0;left:0;width:100%;height:2px}.arch-block:nth-child(1)::after{background:#10b981}.arch-block:nth-child(2)::after{background:#3b82f6}.arch-block:nth-child(3)::after{background:#f472b6}.arch-block:nth-child(4)::after{background:#ef4444}.arch-icon{font-size:2rem;margin-bottom:16px}.arch-name{font-weight:800;font-size:1rem;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px}.arch-count{font-family:var(--font-mono);font-size:0.75rem;color:var(--text-muted)}.arch-desc{font-size:0.85rem;color:var(--text-muted);margin-top:12px;line-height:1.5}
+    .footer{padding:48px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}.footer-brand{font-weight:900;font-size:1.2rem;letter-spacing:0.1em;color:var(--text-muted)}.footer-copy{font-family:var(--font-mono);font-size:0.7rem;color:rgba(255,255,255,0.2)}
+    .reveal{opacity:0;transform:translateY(30px);transition:all 0.8s cubic-bezier(0.16,1,0.3,1)}.reveal.active{opacity:1;transform:translateY(0)}
   </style>
 </head>
 <body>
-
-  <div class="header">
-    <div>
-      <div class="title" id="primitive-title">LOADING...</div>
-      <div class="subtitle" id="primitive-desc">Initializing Telemetry Stream</div>
+  <div class="noise"></div>
+  <nav class="topbar"><div class="topbar-brand"><span class="topbar-logo">&#9878; GOVERNANCECORE</span><span class="topbar-tag">Layer 1 Decision Flow Engine</span></div><div class="topbar-right"><div class="eq-badge"><span class="eq-dot"></span><span id="eq-score">EQUILIBRIUM: --</span></div></div></nav>
+  <section class="hero reveal"><h1 class="hero-title">Governance<span class="accent">Core</span></h1><p class="hero-sub">Deterministic governance engine. Rules coherence, coordination alignment, fairness enforcement, and conflict resolution &mdash; 42 nodes across 4 irreducible primitives. Authority is a system. We route it like one.</p><div class="hero-meta"><div><span class="val">4</span> PRIMITIVES</div><div><span class="val">42</span> NODES</div><div><span class="val" id="hero-eq">--</span> EQUILIBRIUM</div></div></section>
+  <section class="section reveal"><div class="section-header"><div class="section-title">Architecture</div><div class="section-subtitle">The governance system decomposes into four irreducible decision flows</div></div>
+    <div class="arch-grid">
+      <div class="arch-block"><div class="arch-icon">&#9783;</div><div class="arch-name">Rules</div><div class="arch-count">10 NODES</div><div class="arch-desc">Rule clarity, enforcement level, compliance, and structural integrity governance.</div></div>
+      <div class="arch-block"><div class="arch-icon">&#9741;</div><div class="arch-name">Coordination</div><div class="arch-count">10 NODES</div><div class="arch-desc">Agent alignment, resource allocation, scheduling coherence, and information flow.</div></div>
+      <div class="arch-block"><div class="arch-icon">&#9878;</div><div class="arch-name">Fairness</div><div class="arch-count">11 NODES</div><div class="arch-desc">Distributive equity, bias pressure, access equality, and vulnerability protection.</div></div>
+      <div class="arch-block"><div class="arch-icon">&#9888;</div><div class="arch-name">Conflict</div><div class="arch-count">11 NODES</div><div class="arch-desc">Active disputes, escalation pressure, resolution rate, and deadlock risk.</div></div>
     </div>
-    <div class="live-indicator">
-      <div class="dot"></div> LIVE DATALINK
+  </section>
+  <section class="section reveal"><div class="section-header"><div class="section-title">How It Works</div><div class="section-subtitle">GovernanceCore reads authority like a deterministic system</div></div>
+    <div class="explainer-grid">
+      <div class="explainer-step"><div class="step-num">01</div><div class="step-title">4 Primitives</div><div class="step-desc">Every governance state reduces to four irreducible flows: <strong>Rules</strong>, <strong>Coordination</strong>, <strong>Fairness</strong>, and <strong>Conflict Resolution</strong>. These are the four axes of the engine.</div></div>
+      <div class="explainer-step"><div class="step-num">02</div><div class="step-title">42 Nodes</div><div class="step-desc">Each flow decomposes into 10-11 measurable nodes (rule clarity, agent alignment, bias pressure, etc.) &mdash; 42 total. Each holds a value from <strong>0</strong> (critical) to <strong>100</strong> (optimal).</div></div>
+      <div class="explainer-step"><div class="step-num">03</div><div class="step-title">Continuous Sensing</div><div class="step-desc">GovernanceCore continuously reads all 42 nodes, computes governance pressures, and maintains an <strong>equilibrium score</strong> &mdash; a single number representing total structural integrity.</div></div>
+      <div class="explainer-step"><div class="step-num">04</div><div class="step-title">Deterministic Governance</div><div class="step-desc">When fairness metrics collapse or conflict exceeds safe thresholds, the engine <strong>flags, escalates, and reroutes</strong>. No guessing. Pure deterministic governance flow control.</div></div>
     </div>
-  </div>
-
-  <div class="grid" id="node-grid"></div>
+  </section>
+  <section class="organism-section reveal"><div class="ring-wrapper"><div class="ring-container"><canvas class="ring-canvas" id="ring-canvas" width="380" height="380"></canvas><div class="ring-center"><div class="ring-score" id="ring-score">--</div><div class="ring-label">Equilibrium</div></div></div><div class="primitive-tabs" id="prim-tabs"></div></div><div class="inspector" id="inspector"></div></section>
+  <section class="telemetry-section reveal"><div class="section-header"><div class="section-title">Live Telemetry</div><div class="section-subtitle">Real-time node monitoring across the active primitive</div></div><div class="telem-grid" id="telem-grid"></div></section>
+  <footer class="footer"><div class="footer-brand">GOVERNANCECORE.</div><div class="footer-copy">&copy; 2026 Invariant Foundation. Deterministic Decision Governance.</div></footer>
 
   <script>
-    const engineData = {
-      primitives: [
-        { name: "Rules", desc: "Rule Coherence Flow / Structural Integrity", nodes: [
-          { id: "RC1", name: "Rule Clarity" }, { id: "RC2", name: "Rule Enforcement" }, { id: "RC3", name: "Compliance Level" }, { id: "RC4", name: "Regulatory Stability" }, { id: "RC5", name: "Exception Rate" }, { id: "RC6", name: "Rule Drift Risk" }, { id: "RC7", name: "Transparency Level" }, { id: "RC8", name: "Rule Conflict" }, { id: "RC9", name: "Rule Complexity" }, { id: "RC10", name: "Rule Safety Index" }
-        ]},
-        { name: "Coordination", desc: "Coordination Flow / Agent Alignment", nodes: [
-          { id: "CO1", name: "Agent Alignment" }, { id: "CO2", name: "Resource Allocation" }, { id: "CO3", name: "Scheduling Coherence" }, { id: "CO4", name: "Information Flow" }, { id: "CO5", name: "Coordination Drift" }, { id: "CO6", name: "Coordination Overhead" }, { id: "CO7", name: "Redundancy Level" }, { id: "CO8", name: "Bottleneck Severity" }, { id: "CO9", name: "Scalability" }, { id: "CO10", name: "Coordination Safety Index" }
-        ]},
-        { name: "Fairness", desc: "Fairness Flow / Equity and Inclusion", nodes: [
-          { id: "F1", name: "Distributive Equity" }, { id: "F2", name: "Bias Pressure" }, { id: "F3", name: "Access Equality" }, { id: "F4", name: "Representation Balance" }, { id: "F5", name: "Grievance Accessibility" }, { id: "F6", name: "Outcome Transparency" }, { id: "F7", name: "Vulnerability Protection" }, { id: "F8", name: "Exploitation Risk" }, { id: "F9", name: "Inclusion Level" }, { id: "F10", name: "Power Balance" }, { id: "F11", name: "Fairness Safety Index" }
-        ]},
-        { name: "Conflict", desc: "Conflict Resolution / Escalation Control", nodes: [
-          { id: "CR1", name: "Active Disputes" }, { id: "CR2", name: "Escalation Pressure" }, { id: "CR3", name: "Resolution Rate" }, { id: "CR4", name: "Mediation Effectiveness" }, { id: "CR5", name: "Deadlock Risk" }, { id: "CR6", name: "Retaliation Pressure" }, { id: "CR7", name: "Stakeholder Satisfaction" }, { id: "CR8", name: "Systemic Conflict" }, { id: "CR9", name: "Prevention Effectiveness" }, { id: "CR10", name: "Recurrence Rate" }, { id: "CR11", name: "Global Governance Resilience" }
-        ]}
-      ]
-    };
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const primitiveKey = urlParams.get('primitive') || 'Rules';
-    const primitive = engineData.primitives.find(p => p.name === primitiveKey);
-
-    document.getElementById('primitive-title').innerText = primitive.name.toUpperCase() + " FLOW";
-    document.getElementById('primitive-desc').innerText = primitive.desc;
-
-    const grid = document.getElementById('node-grid');
-    const nodesState = {};
-
-    primitive.nodes.forEach(node => {
-      nodesState[node.id] = { val: 90 + Math.random() * 8, history: Array(20).fill(50) };
-      const el = document.createElement('div');
-      el.className = 'node-card';
-      el.id = 'card-' + node.id;
-      let bars = '';
-      for(let i=0; i<20; i++) bars += `<div class="bar" id="bar-${node.id}-${i}"></div>`;
-      el.innerHTML = `
-        <div class="node-header"><div><div class="node-id">${node.id}</div><div class="node-name">${node.name}</div></div></div>
-        <div class="node-data"><div class="node-value" id="val-${node.id}">--</div><div class="node-metric">% CAP</div></div>
-        <div class="chart">${bars}</div>
-      `;
-      grid.appendChild(el);
-    });
-
-    setInterval(() => {
-      primitive.nodes.forEach(node => {
-        const state = nodesState[node.id];
-        state.val = Math.max(10, Math.min(100, state.val + (Math.random() - 0.45) * 4));
-        state.history.shift(); state.history.push(state.val);
-        const valEl = document.getElementById('val-' + node.id);
-        const cardEl = document.getElementById('card-' + node.id);
-        valEl.innerText = state.val.toFixed(1);
-        cardEl.className = 'node-card';
-        if (state.val < 40) { cardEl.classList.add('critical'); valEl.style.color = 'var(--critical)'; }
-        else if (state.val < 70) { cardEl.classList.add('caution'); valEl.style.color = 'var(--caution)'; }
-        else { valEl.style.color = 'var(--optimal)'; }
-        for(let i=0; i<20; i++) document.getElementById(`bar-${node.id}-${i}`).style.height = state.history[i] + '%';
-      });
-    }, 1000);
+    const ENGINE={name:'GovernanceCore',primitives:[
+      {key:'rules',name:'Rules',color:'#10b981',nodes:[{id:'RC1',name:'Rule Clarity'},{id:'RC2',name:'Rule Enforcement'},{id:'RC3',name:'Compliance Level'},{id:'RC4',name:'Regulatory Stability'},{id:'RC5',name:'Exception Rate'},{id:'RC6',name:'Rule Drift Risk'},{id:'RC7',name:'Transparency Level'},{id:'RC8',name:'Rule Conflict'},{id:'RC9',name:'Rule Complexity'},{id:'RC10',name:'Rule Safety Index'}]},
+      {key:'coordination',name:'Coordination',color:'#3b82f6',nodes:[{id:'CO1',name:'Agent Alignment'},{id:'CO2',name:'Resource Allocation'},{id:'CO3',name:'Scheduling Coherence'},{id:'CO4',name:'Information Flow'},{id:'CO5',name:'Coordination Drift'},{id:'CO6',name:'Coordination Overhead'},{id:'CO7',name:'Redundancy Level'},{id:'CO8',name:'Bottleneck Severity'},{id:'CO9',name:'Scalability'},{id:'CO10',name:'Coordination Safety Index'}]},
+      {key:'fairness',name:'Fairness',color:'#f472b6',nodes:[{id:'F1',name:'Distributive Equity'},{id:'F2',name:'Bias Pressure'},{id:'F3',name:'Access Equality'},{id:'F4',name:'Representation Balance'},{id:'F5',name:'Grievance Accessibility'},{id:'F6',name:'Outcome Transparency'},{id:'F7',name:'Vulnerability Protection'},{id:'F8',name:'Exploitation Risk'},{id:'F9',name:'Inclusion Level'},{id:'F10',name:'Power Balance'},{id:'F11',name:'Fairness Safety Index'}]},
+      {key:'conflict',name:'Conflict',color:'#ef4444',nodes:[{id:'CR1',name:'Active Disputes'},{id:'CR2',name:'Escalation Pressure'},{id:'CR3',name:'Resolution Rate'},{id:'CR4',name:'Mediation Effectiveness'},{id:'CR5',name:'Deadlock Risk'},{id:'CR6',name:'Retaliation Pressure'},{id:'CR7',name:'Stakeholder Satisfaction'},{id:'CR8',name:'Systemic Conflict'},{id:'CR9',name:'Prevention Effectiveness'},{id:'CR10',name:'Recurrence Rate'},{id:'CR11',name:'Global Governance Resilience'}]}
+    ]};
+    const nodeState={};let activePrimitive=0;
+    ENGINE.primitives.forEach(p=>p.nodes.forEach(n=>{nodeState[n.id]={val:70+Math.random()*25,history:Array(20).fill(0).map(()=>60+Math.random()*30)};}));
+    const tabsEl=document.getElementById('prim-tabs');ENGINE.primitives.forEach((p,i)=>{const btn=document.createElement('button');btn.className='prim-tab'+(i===0?' active':'');btn.textContent=p.name;btn.addEventListener('click',()=>{activePrimitive=i;document.querySelectorAll('.prim-tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');buildInspector();buildTelemetry();});tabsEl.appendChild(btn);});
+    function buildInspector(){const el=document.getElementById('inspector');el.innerHTML='';ENGINE.primitives[activePrimitive].nodes.forEach(n=>{const s=nodeState[n.id];const row=document.createElement('div');row.className='node-row';row.id='row-'+n.id;row.innerHTML=`<div class="node-id">${n.id}</div><div class="node-name">${n.name}</div><div class="node-val" id="ival-${n.id}" style="color:${vc(s.val)}">${s.val.toFixed(1)}</div><div class="node-bar-wrap"><div class="node-bar" id="ibar-${n.id}" style="width:${s.val}%;background:${vc(s.val)}"></div></div>`;el.appendChild(row);});}
+    function buildTelemetry(){const el=document.getElementById('telem-grid');el.innerHTML='';ENGINE.primitives[activePrimitive].nodes.forEach(n=>{const s=nodeState[n.id];const card=document.createElement('div');card.className='telem-card';card.id='tcard-'+n.id;let bars='';for(let i=0;i<20;i++)bars+=`<div class="spark-bar" id="spark-${n.id}-${i}" style="height:${s.history[i]}%"></div>`;card.innerHTML=`<div><div class="telem-id">${n.id}</div><div class="telem-name">${n.name}</div></div><div style="display:flex;align-items:flex-end;gap:12px;margin-top:12px;"><div class="telem-value" id="tval-${n.id}" style="color:${vc(s.val)}">${s.val.toFixed(1)}</div><div class="telem-unit">% CAP</div></div><div class="sparkline">${bars}</div>`;el.appendChild(card);});}
+    function vc(v){return v>=70?'#22c55e':v>=40?'#f59e0b':'#ef4444';}
+    const canvas=document.getElementById('ring-canvas');const ctx=canvas.getContext('2d');const DPR=window.devicePixelRatio||1;canvas.width=380*DPR;canvas.height=380*DPR;ctx.scale(DPR,DPR);
+    function drawRing(){const cx=190,cy=190,r=150;ctx.clearRect(0,0,380,380);ENGINE.primitives.forEach((prim,pi)=>{const nodes=prim.nodes;const arcSize=(Math.PI*2)/ENGINE.primitives.length;const startAngle=pi*arcSize-Math.PI/2;nodes.forEach((n,ni)=>{const angle=startAngle+(ni/nodes.length)*arcSize;const s=nodeState[n.id];const nr=r*(s.val/100);const x=cx+Math.cos(angle)*nr;const y=cy+Math.sin(angle)*nr;ctx.beginPath();ctx.arc(x,y,4,0,Math.PI*2);ctx.fillStyle=vc(s.val);ctx.fill();ctx.beginPath();ctx.arc(x,y,8,0,Math.PI*2);const glow=ctx.createRadialGradient(x,y,0,x,y,8);glow.addColorStop(0,vc(s.val)+'40');glow.addColorStop(1,'transparent');ctx.fillStyle=glow;ctx.fill();if(ni<nodes.length-1){const na=startAngle+((ni+1)/nodes.length)*arcSize;const ns=nodeState[nodes[ni+1].id];const nnr=r*(ns.val/100);ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(cx+Math.cos(na)*nnr,cy+Math.sin(na)*nnr);ctx.strokeStyle=prim.color+'30';ctx.lineWidth=1;ctx.stroke();}});ctx.beginPath();ctx.arc(cx,cy,r+15,startAngle,startAngle+arcSize);ctx.strokeStyle=prim.color+'25';ctx.lineWidth=6;ctx.stroke();const avg=nodes.reduce((a,n)=>a+nodeState[n.id].val,0)/nodes.length;ctx.beginPath();ctx.arc(cx,cy,r+15,startAngle,startAngle+arcSize*(avg/100));ctx.strokeStyle=prim.color;ctx.lineWidth=6;ctx.stroke();});}
+    function tick(){let tv=0,tn=0;ENGINE.primitives.forEach(p=>p.nodes.forEach(n=>{const s=nodeState[n.id];const target=75+Math.sin(Date.now()/10000+n.id.charCodeAt(1)*0.5)*15;s.val=Math.max(5,Math.min(100,s.val+(target-s.val)*0.02+(Math.random()-0.5)*3));s.history.shift();s.history.push(s.val);tv+=s.val;tn++;}));const eq=tv/tn;document.getElementById('eq-score').textContent=`EQUILIBRIUM: ${eq.toFixed(1)}`;document.getElementById('ring-score').textContent=eq.toFixed(1);document.getElementById('hero-eq').textContent=eq.toFixed(1);const prim=ENGINE.primitives[activePrimitive];prim.nodes.forEach(n=>{const s=nodeState[n.id];const c=vc(s.val);const iv=document.getElementById('ival-'+n.id);const ib=document.getElementById('ibar-'+n.id);if(iv){iv.textContent=s.val.toFixed(1);iv.style.color=c;}if(ib){ib.style.width=s.val+'%';ib.style.background=c;}const tv2=document.getElementById('tval-'+n.id);const tc=document.getElementById('tcard-'+n.id);if(tv2){tv2.textContent=s.val.toFixed(1);tv2.style.color=c;}if(tc){tc.className='telem-card'+(s.val<40?' critical':s.val<70?' caution':'');}for(let i=0;i<20;i++){const b=document.getElementById(`spark-${n.id}-${i}`);if(b){b.style.height=s.history[i]+'%';b.style.background=c;}}});drawRing();if(window.parent&&window.parent.InvariantBus)window.parent.InvariantBus.publish('GOVERNANCECORE','equilibrium',eq);}
+    buildInspector();buildTelemetry();drawRing();setInterval(tick,1000);tick();
+    const reveals=document.querySelectorAll('.reveal');const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('active');obs.unobserve(e.target);}}),{threshold:0.1});reveals.forEach(r=>obs.observe(r));setTimeout(()=>reveals.forEach(r=>{if(r.getBoundingClientRect().top<window.innerHeight)r.classList.add('active');}),100);
   </script>
 </body>
 </html>
