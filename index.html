@@ -101,11 +101,11 @@
       'hydrocore':      { url: 'https://hydrocore.dev',              title: 'HYDROCORE' },
       'meridian':       { url: 'https://meridiancanon.com',          title: 'MERIDIAN' },
       'fla':            { url: 'https://fla.tlid.io',                title: 'FRACTAL LEDGER' },
-      'biocore':        { url: '/dist/biocore/engine.html',          title: 'BIOCORE' },
-      'governancecore': { url: '/dist/governancecore/engine.html',   title: 'GOVERNANCECORE' },
-      'neurocore':      { url: '/dist/neurocore/engine.html',        title: 'NEUROCORE' },
-      'sociocore':      { url: '/dist/sociocore/engine.html',        title: 'SOCIOCORE' },
-      'verdara':        { url: '/dist/verdara/verdara.js',           title: 'VERDARA' },
+      'biocore':        { url: '/biocore/engine.html',               title: 'BIOCORE' },
+      'governancecore': { url: '/governancecore/engine.html',        title: 'GOVERNANCECORE' },
+      'neurocore':      { url: '/neurocore/engine.html',             title: 'NEUROCORE' },
+      'sociocore':      { url: '/sociocore/engine.html',             title: 'SOCIOCORE' },
+      'verdara':        { url: '/verdara/index.html',                title: 'VERDARA' },
     };
     function openApp(url, title) {
       const iframe = document.getElementById('app-iframe');
@@ -176,9 +176,10 @@
       const cores = [
         { key: 'LUME',           label: 'LUME',       static: true },
         { key: 'LUMEV',          label: 'LUME-V',     static: true },
+        { key: 'FLA',            label: 'FLA',        static: true },
+        { key: 'AXIOM42',        label: 'AXIOM42',    static: true },
         { key: 'HYDROCORE',      label: 'HYDROCORE',  static: true },
         { key: 'MERIDIAN',       label: 'MERIDIAN',   static: true },
-        { key: 'FLA',            label: 'FLA',        static: true },
         { key: 'BIOCORE',        label: 'BIOCORE',    static: false },
         { key: 'GOVERNANCECORE', label: 'GOVERNANCE', static: false },
         { key: 'NEUROCORE',      label: 'NEURO',      static: false },
@@ -299,6 +300,6 @@
       }, 500); // Small delay to let Lume DOM inject
     });
   </script>
-  <script src="/dist/dwsc.js"></script>
+  <script src="/dwsc.js"></script>
 </body>
 </html>
